@@ -1,0 +1,24 @@
+.modal{
+    background: #1C1C21;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.info {
+    margin-bottom: 16px ;
+    width: 80%;
+}
+
+.title,
+.value {
+    color: #8585AD;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-right: 20px;
+}
+
+.text {
+    text-align: center;
+}

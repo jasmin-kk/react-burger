@@ -1,0 +1,34 @@
+.header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+.background{
+    background: #1C1C21;
+}
+
+.logo{
+    margin-right: 90px;
+}
+
+.text {
+    color: #8585AD;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.mainText{
+    color: white;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.block{
+    display: flex;
+}

@@ -1,0 +1,38 @@
+.modal{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #1C1C21;
+    border-radius: 40px;
+    box-shadow: 0 0 1px 0 #0000000A,
+    0 4px 8px 0 #0000000A,
+    0 16px 24px 0 #0000000A,
+    0 24px 32px 0 #0000000A;
+    z-index: 1000;
+    width: 720px;
+    max-width: 90%;
+    overflow: hidden;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 40px;
+}
+
+.content {
+    padding: 20px;
+}
+
+.text_type_main-medium {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.text_type_main-default {
+    font-size: 16px;
+    margin: 8px 0;
+}

@@ -1,8 +1,8 @@
-import React from 'react';
+import React, {FC} from 'react';
 import doneImage from '../../../images/done.png';
 import style from '../order-details/order-details.module.css';
 
-export const OrderDetails: React.FC = () => {
+export const OrderDetails: FC = () => {
   return (
     <div className={style.main}>
       <h3 className="text text_type_digits-large mb-8">034536</h3>

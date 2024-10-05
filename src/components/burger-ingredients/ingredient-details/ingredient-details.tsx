@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {FC} from 'react';
 import { Ingredient } from '../../../utils/data';
 import style from './ingredient-details.module.css';
 
@@ -6,7 +6,7 @@ interface IngredientDetailsProps {
   ingredient: Ingredient;
 }
 
-export const IngredientDetails: React.FC<IngredientDetailsProps> = ({
+export const IngredientDetails: FC<IngredientDetailsProps> = ({
   ingredient,
 }) => {
   return (

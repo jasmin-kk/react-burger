@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import { fetchIngredients } from '../utils/api';
 import { BurgerIngredients } from '../components/burger-ingredients/burger-ingredients';
 import { AppHeader } from '../components/app-header/app-header';
@@ -6,7 +6,7 @@ import style from './app.module.scss';
 import { Ingredient } from '../utils/data';
 import { BurgerConstructor } from '../components/burger-constructor/burger-constructor';
 
-export const Index: React.FC = () => {
+export const Index: FC = () => {
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
   const [error, setError] = useState<string | null>(null);
 

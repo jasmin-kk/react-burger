@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {FC, useState} from 'react';
 import { IngredientsGroup } from './ingredients-group/ingredients-group';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import style from './burger-ingredients.module.css';
@@ -8,10 +8,10 @@ interface BurgerIngredientsProps {
   ingredients: Ingredient[];
 }
 
-export const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({
+export const BurgerIngredients: FC<BurgerIngredientsProps> = ({
   ingredients,
 }) => {
-  const [current, setCurrent] = React.useState('one');
+  const [current, setCurrent] = useState('one');
   return (
     <div className={style.block}>
       <h1 className="text text_type_main-large mb-5">Соберите бургер</h1>

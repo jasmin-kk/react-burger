@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {FC, useState} from 'react';
 import {
   Button,
   ConstructorElement,
@@ -14,7 +14,7 @@ interface BurgerIngredientsProps {
   ingredients: Ingredient[];
 }
 
-export const BurgerConstructor: React.FC<BurgerIngredientsProps> = ({
+export const BurgerConstructor: FC<BurgerIngredientsProps> = ({
   ingredients,
 }) => {
   const [isModalOpen, setModalOpen] = useState(false); // Состояние для открытия модального окна

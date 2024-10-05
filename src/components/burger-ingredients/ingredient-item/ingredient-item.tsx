@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {FC} from 'react';
 import { Ingredient } from '../../../utils/data';
 import {
   Counter,
@@ -10,7 +10,7 @@ interface IngredientItemProps {
   ingredient: Ingredient;
 }
 
-export const IngredientItem: React.FC<IngredientItemProps> = ({
+export const IngredientItem: FC<IngredientItemProps> = ({
   ingredient,
 }) => {
   return (

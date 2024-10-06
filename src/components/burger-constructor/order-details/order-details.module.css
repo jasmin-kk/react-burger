@@ -1,0 +1,14 @@
+.main{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.color{
+    color: #8585AD;
+}
+
+.img{
+    width: 120px;
+    height: 120px;
+}

@@ -1,32 +1,44 @@
-import clsx from 'clsx';
-import { useState } from 'react';
-import s from './app.module.scss';
-import reactLogo from './assets/react.svg';
-import { ReactComponent as TypescriptLogo } from './assets/typescript.svg';
+import React, {FC, useEffect, useState} from 'react';
+import { fetchIngredients } from '../utils/api';
+import { BurgerIngredients } from '../components/burger-ingredients/burger-ingredients';
+import { AppHeader } from '../components/app-header/app-header';
+import style from './app.module.scss';
+import { Ingredient } from '../utils/data';
+import { BurgerConstructor } from '../components/burger-constructor/burger-constructor';
 
-export const App = () => {
-	// const num = 0
-	const [count, setCount] = useState(0);
-	return (
-		<div className='page'>
-			<div className='logo-wrapper'>
-				<a href='https://reactjs.org' target='_blank' rel='noreferrer'>
-					<img
-						src={reactLogo}
-						className={clsx(s.logo, s.react)}
-						alt='React logo'
-					/>
-				</a>
-				<a href='https://vitejs.dev' target='_blank' rel='noreferrer'>
-					<TypescriptLogo className={s.logo} />
-				</a>
-			</div>
-			<h1>React + TS</h1>
-			<div className={s.card}>
-				<button onClick={() => setCount((count) => count + 1)}>
-					count is {count}
-				</button>
-			</div>
-		</div>
-	);
+export const Index: FC = () => {
+  const [ingredients, setIngredients] = useState<Ingredient[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const getIngredients = async () => {
+      try {
+        const data = await fetchIngredients();
+        setIngredients(data);
+      } catch (err) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError('Произошла неизвестная ошибка');
+        }
+      }
+    };
+
+    getIngredients();
+  }, []);
+
+  if (error) {
+    return <div>Ошибка: {error}</div>;
+  }
+
+  return (
+    <>
+      <AppHeader></AppHeader>
+      <div className={style.main}>
+        <BurgerIngredients ingredients={ingredients}></BurgerIngredients>
+        <BurgerConstructor ingredients={ingredients}></BurgerConstructor>
+        <div id="modal-root"></div>
+      </div>
+    </>
+  );
 };

@@ -35,6 +35,10 @@
     border-radius: 40px;
 }
 
+.m-1{
+    margin: 20px;
+}
+
 .elementList{
     margin: 0 10px 16px 13px;
 }

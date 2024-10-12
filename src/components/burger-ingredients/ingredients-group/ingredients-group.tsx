@@ -1,4 +1,4 @@
-import React, { FC, useMemo, useState, useEffect, useRef } from 'react';
+import React, { FC, useMemo, useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import {
   setIngredientDetails,
@@ -12,11 +12,13 @@ import { IngredientDetails } from '../ingredient-details/ingredient-details';
 
 interface IngredientsGroupProps {
   ingredients: Ingredient[];
+  ingredientCounts: Record<string, number>;
   onTabChange: (tab: string) => void;
 }
 
 export const IngredientsGroup: FC<IngredientsGroupProps> = ({
   ingredients,
+  ingredientCounts,
   onTabChange,
 }) => {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -52,30 +54,6 @@ export const IngredientsGroup: FC<IngredientsGroupProps> = ({
     main: 'Начинки',
   };
 
-  const handleScroll = () => {
-    if (groupRef.current) {
-      const sections = groupRef.current.querySelectorAll('h2');
-      sections.forEach((section) => {
-        const rect = section.getBoundingClientRect();
-        if (rect.top >= 0 && rect.top < 100) {
-          onTabChange(section.getAttribute('data-type') || 'bun');
-        }
-      });
-    }
-  };
-
-  useEffect(() => {
-    const currentRef = groupRef.current;
-    if (currentRef) {
-      currentRef.addEventListener('scroll', handleScroll);
-    }
-    return () => {
-      if (currentRef) {
-        currentRef.removeEventListener('scroll', handleScroll);
-      }
-    };
-  }, []);
-
   return (
     <div
       ref={groupRef}
@@ -86,7 +64,7 @@ export const IngredientsGroup: FC<IngredientsGroupProps> = ({
         (type) =>
           groupedIngredients[type] && (
             <div key={type} className={style.block}>
-              <h2 className="text text_type_main-medium" data-type={type}>
+              <h2 className="text text_type_main-medium">
                 {ingredientTypeTitles[type]}
               </h2>
               <div className={style.list}>
@@ -96,7 +74,10 @@ export const IngredientsGroup: FC<IngredientsGroupProps> = ({
                     className={style.item}
                     onClick={() => handleIngredientClick(ingredient)}
                   >
-                    <IngredientItem ingredient={ingredient} />
+                    <IngredientItem
+                      ingredient={ingredient}
+                      count={ingredientCounts[ingredient._id] || 0}
+                    />
                   </div>
                 ))}
               </div>

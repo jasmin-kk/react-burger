@@ -1,15 +1,17 @@
 import React, { FC, useState } from 'react';
+import { Ingredient } from '../../utils/data';
 import { IngredientsGroup } from './ingredients-group/ingredients-group';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import style from './burger-ingredients.module.css';
-import { Ingredient } from '../../utils/data';
 
 interface BurgerIngredientsProps {
   ingredients: Ingredient[];
+  ingredientCounts: Record<string, number>;
 }
 
 export const BurgerIngredients: FC<BurgerIngredientsProps> = ({
   ingredients,
+  ingredientCounts,
 }) => {
   const [current, setCurrent] = useState('bun');
 
@@ -39,7 +41,11 @@ export const BurgerIngredients: FC<BurgerIngredientsProps> = ({
           Начинки
         </Tab>
       </div>
-      <IngredientsGroup ingredients={ingredients} onTabChange={setCurrent} />
+      <IngredientsGroup
+        ingredients={ingredients}
+        ingredientCounts={ingredientCounts}
+        onTabChange={setCurrent}
+      />
     </div>
   );
 };

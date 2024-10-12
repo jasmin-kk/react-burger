@@ -12,3 +12,10 @@ export interface Ingredient {
   image_large: string;
   __v: number;
 }
+
+export interface Order {
+  id: string;
+  ingredients: Ingredient[];
+  totalPrice: number;
+  number: number;
+}

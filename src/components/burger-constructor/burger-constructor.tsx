@@ -17,7 +17,7 @@ interface BurgerIngredientsProps {
 export const BurgerConstructor: FC<BurgerIngredientsProps> = ({
   ingredients,
 }) => {
-  const [isModalOpen, setModalOpen] = useState(false); // Состояние для открытия модального окна
+  const [isModalOpen, setModalOpen] = useState(false);
 
   const openModal = () => {
     setModalOpen(true);
@@ -29,6 +29,8 @@ export const BurgerConstructor: FC<BurgerIngredientsProps> = ({
 
   return (
     <div className={style.main}>
+      <div className={style.null}></div>
+      <div className={style.middle}></div>
       <ConstructorElement
         extraClass={style.element}
         type="top"
@@ -58,6 +60,7 @@ export const BurgerConstructor: FC<BurgerIngredientsProps> = ({
         price={200}
         thumbnail="https://code.s3.yandex.net/react/code/bun-02.png"
       />
+      <div className={style.nullBottom}></div>
       <div className={style.footer}>
         <p className={`text text_type_digits-default ${style.sum}`}>
           1234

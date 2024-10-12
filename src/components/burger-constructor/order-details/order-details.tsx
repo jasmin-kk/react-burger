@@ -5,7 +5,6 @@ import doneImage from '../../../images/done.png';
 import style from '../order-details/order-details.module.css';
 
 export const OrderDetails: FC = () => {
-  // Получаем заказ из состояния
   const order = useSelector((state: RootState) => state.order.order);
 
   return (

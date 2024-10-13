@@ -9,6 +9,10 @@ import style from './burger-constructor.module.css';
 import { Ingredient } from '../../utils/data';
 import { Modal } from '../modal/modal';
 import { OrderDetails } from './order-details/order-details';
+import { useDispatch, useSelector } from 'react-redux';
+import { placeOrder } from '../../services/order-object';
+import { RootState } from '../../store';
+import { AppDispatch } from '../../store';
 
 interface BurgerConstructorProps {
   ingredients: Ingredient[];
@@ -24,6 +28,8 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
   const [isModalOpen, setModalOpen] = useState(false);
   const [addedIngredients, setAddedIngredients] = useState<Ingredient[]>([]);
   const [bun, setBun] = useState<Ingredient | null>(null);
+  const dispatch = useDispatch<AppDispatch>();
+  const error = useSelector((state: RootState) => state.order.error);
 
   const [{ canDrop, isOver }, drop] = useDrop({
     accept: 'ingredient',
@@ -68,8 +74,26 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
     return bunPrice + ingredientsPrice;
   }, [bun, addedIngredients]);
 
+  const handleOrder = () => {
+    const ingredientsIds: string[] = [
+      bun?._id,
+      ...addedIngredients.map((ing) => ing._id),
+    ].filter((id): id is string => id !== undefined);
+
+    if (ingredientsIds.length === 0) {
+      return;
+    }
+
+    dispatch(placeOrder(ingredientsIds));
+    openModal();
+  };
+
   return (
     <div ref={drop} className={style.main}>
+      {error && (
+        <p className="text text_type_main-small text_color_inactive">{error}</p>
+      )}
+
       {!bun && addedIngredients.length === 0 && (
         <>
           <div className={`${style.null} ${style['m-1']}`}></div>
@@ -119,10 +143,11 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
           {totalPrice} <CurrencyIcon type="primary" />
         </p>
         <Button
-          onClick={openModal}
+          onClick={handleOrder}
           htmlType="button"
           type="primary"
           size="medium"
+          disabled={!bun}
         >
           Оформить заказ
         </Button>

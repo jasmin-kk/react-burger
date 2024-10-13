@@ -4,7 +4,6 @@ import {
   Button,
   ConstructorElement,
   CurrencyIcon,
-  DragIcon,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import style from './burger-constructor.module.css';
 import { Ingredient } from '../../utils/data';
@@ -14,7 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { placeOrder } from '../../services/order-object';
 import { RootState } from '../../store';
 import { AppDispatch } from '../../store';
-
+import { SortableIngredient } from './sortable-ingredient/sortable-ingredient';
 interface BurgerConstructorProps {
   ingredients: Ingredient[];
   onIngredientDrop: (ingredient: Ingredient) => void;
@@ -66,6 +65,13 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
     );
   };
 
+  const moveIngredient = (fromIndex: number, toIndex: number) => {
+    const updatedIngredients = Array.from(addedIngredients);
+    const [movedIngredient] = updatedIngredients.splice(fromIndex, 1);
+    updatedIngredients.splice(toIndex, 0, movedIngredient);
+    setAddedIngredients(updatedIngredients);
+  };
+
   const totalPrice = useMemo(() => {
     const bunPrice = (bun?.price || 0) * 2;
     const ingredientsPrice = addedIngredients.reduce(
@@ -115,17 +121,14 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
       )}
 
       <div className={style.scroll}>
-        {addedIngredients.map((ingredient) => (
-          <div key={ingredient._id} className={style.scrollBlock}>
-            <DragIcon type="primary" />
-            <ConstructorElement
-              extraClass="m-1"
-              text={ingredient.name}
-              price={ingredient.price}
-              thumbnail={ingredient.image}
-              handleClose={() => handleRemoveIngredient(ingredient._id)}
-            />
-          </div>
+        {addedIngredients.map((ingredient, index) => (
+          <SortableIngredient
+            key={ingredient._id}
+            ingredient={ingredient}
+            index={index}
+            moveIngredient={moveIngredient}
+            handleRemove={handleRemoveIngredient}
+          />
         ))}
       </div>
 

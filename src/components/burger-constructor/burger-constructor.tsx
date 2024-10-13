@@ -14,6 +14,8 @@ import { placeOrder } from '../../services/order-object';
 import { RootState } from '../../store';
 import { AppDispatch } from '../../store';
 import { SortableIngredient } from './sortable-ingredient/sortable-ingredient';
+import { v4 as uuidv4 } from 'uuid';
+
 interface BurgerConstructorProps {
   ingredients: Ingredient[];
   onIngredientDrop: (ingredient: Ingredient) => void;
@@ -34,7 +36,7 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
   const [{ canDrop, isOver }, drop] = useDrop({
     accept: 'ingredient',
     drop: (item: { ingredient: Ingredient }) => {
-      const ingredient = item.ingredient;
+      const ingredient = { ...item.ingredient, id: uuidv4() };
 
       if (ingredient.type === 'bun') {
         setBun(ingredient);
@@ -61,7 +63,7 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
   const handleRemoveIngredient = (ingredientId: string) => {
     onIngredientRemove(ingredientId);
     setAddedIngredients((prev) =>
-      prev.filter((ing) => ing._id !== ingredientId)
+      prev.filter((ingredient) => ingredient.id !== ingredientId)
     );
   };
 
@@ -84,7 +86,7 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
   const handleOrder = () => {
     const ingredientsIds: string[] = [
       bun?._id,
-      ...addedIngredients.map((ing) => ing._id),
+      ...addedIngredients.map((ing) => ing.id),
     ].filter((id): id is string => id !== undefined);
 
     if (ingredientsIds.length === 0) {
@@ -123,7 +125,7 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
       <div className={style.scroll}>
         {addedIngredients.map((ingredient, index) => (
           <SortableIngredient
-            key={ingredient._id}
+            key={ingredient.id}
             ingredient={ingredient}
             index={index}
             moveIngredient={moveIngredient}

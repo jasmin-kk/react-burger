@@ -47,7 +47,7 @@ export const SortableIngredient: FC<SortableIngredientProps> = ({
         text={ingredient.name}
         price={ingredient.price}
         thumbnail={ingredient.image}
-        handleClose={() => handleRemove(ingredient._id)}
+        handleClose={() => handleRemove(ingredient.id!)}
       />
     </div>
   );

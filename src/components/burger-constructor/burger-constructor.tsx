@@ -1,4 +1,4 @@
-import React, { FC, useState, useMemo } from 'react';
+import React, { FC, useState, useMemo, useEffect } from 'react';
 import { useDrop } from 'react-dnd';
 import {
   Button,
@@ -86,16 +86,24 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
   const handleOrder = () => {
     const ingredientsIds: string[] = [
       bun?._id,
-      ...addedIngredients.map((ing) => ing.id),
+      ...addedIngredients.map((ing) => ing._id),
     ].filter((id): id is string => id !== undefined);
 
     if (ingredientsIds.length === 0) {
       return;
     }
 
-    dispatch(placeOrder(ingredientsIds));
-    openModal();
+    dispatch(placeOrder(ingredientsIds))
+      .unwrap()
+      .then(() => openModal())
+      .catch((error) => console.error('Ошибка оформления заказа:', error));
   };
+
+  useEffect(() => {
+    if (error) {
+      console.error('Ошибка при оформлении заказа:', error);
+    }
+  }, [error]);
 
   return (
     <div ref={drop} className={style.main}>

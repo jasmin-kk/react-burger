@@ -4,6 +4,7 @@ import {
   Button,
   ConstructorElement,
   CurrencyIcon,
+  DragIcon,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import style from './burger-constructor.module.css';
 import { Ingredient } from '../../utils/data';
@@ -116,6 +117,7 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
       <div className={style.scroll}>
         {addedIngredients.map((ingredient) => (
           <div key={ingredient._id} className={style.scrollBlock}>
+            <DragIcon type="primary" />
             <ConstructorElement
               extraClass="m-1"
               text={ingredient.name}

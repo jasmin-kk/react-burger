@@ -39,6 +39,11 @@ export const SortableIngredient: FC<SortableIngredientProps> = ({
 
   drag(drop(ref));
 
+  const handleClose = () => {
+    handleRemove(ingredient.id);
+    handleRemove(ingredient._id);
+  };
+
   return (
     <div ref={ref} className={style.scrollBlock}>
       <DragIcon type="primary" />
@@ -47,7 +52,7 @@ export const SortableIngredient: FC<SortableIngredientProps> = ({
         text={ingredient.name}
         price={ingredient.price}
         thumbnail={ingredient.image}
-        handleClose={() => handleRemove(ingredient.id!)}
+        handleClose={handleClose}
       />
     </div>
   );

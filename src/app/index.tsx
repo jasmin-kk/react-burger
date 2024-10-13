@@ -24,10 +24,13 @@ export const Index: FC = () => {
   }, [dispatch]);
 
   const handleIngredientDrop = (ingredient: Ingredient) => {
-    setIngredientCounts((prevCounts) => ({
-      ...prevCounts,
-      [ingredient._id]: (prevCounts[ingredient._id] || 0) + 1,
-    }));
+    setIngredientCounts((prevCounts) => {
+      const increment = ingredient.type === 'bun' ? 2 : 1; // Увеличиваем на 2 для булок
+      return {
+        ...prevCounts,
+        [ingredient._id]: (prevCounts[ingredient._id] || 0) + increment,
+      };
+    });
   };
 
   const handleIngredientRemove = (ingredientId: string) => {

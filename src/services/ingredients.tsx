@@ -1,12 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { Ingredient } from '../utils/data';
-
-const API_URL = 'https://norma.nomoreparties.space/api/ingredients';
+import { BASE_URL } from '../utils/api';
 
 export const fetchIngredients = createAsyncThunk(
   'ingredients/fetchIngredients',
   async () => {
-    const response = await fetch(API_URL);
+    const response = await fetch(`${BASE_URL}/ingredients`);
     if (!response.ok) {
       throw new Error('Ошибка при загрузке данных');
     }

@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { Order } from '../utils/data';
+import { BASE_URL } from '../utils/api';
 
 interface OrderState {
   order: Order | null;
@@ -17,16 +18,13 @@ export const placeOrder = createAsyncThunk(
   'order/placeOrder',
   async (ingredientsIds: string[], { rejectWithValue }) => {
     try {
-      const response = await fetch(
-        'https://norma.nomoreparties.space/api/orders',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ ingredients: ingredientsIds }),
-        }
-      );
+      const response = await fetch(`${BASE_URL}/orders`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ingredients: ingredientsIds }),
+      });
 
       if (!response.ok) {
         throw new Error('Ошибка при оформлении заказа');

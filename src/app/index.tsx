@@ -25,7 +25,7 @@ export const Index: FC = () => {
 
   const handleIngredientDrop = (ingredient: Ingredient) => {
     setIngredientCounts((prevCounts) => {
-      const increment = ingredient.type === 'bun' ? 2 : 1; // Увеличиваем на 2 для булок
+      const increment = ingredient.type === 'bun' ? 2 : 1;
       return {
         ...prevCounts,
         [ingredient._id]: (prevCounts[ingredient._id] || 0) + increment,

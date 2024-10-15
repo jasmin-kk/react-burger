@@ -14,12 +14,16 @@ import { placeOrder } from '../../services/order-object';
 import { RootState } from '../../store';
 import { AppDispatch } from '../../store';
 import { SortableIngredient } from './sortable-ingredient/sortable-ingredient';
-import { v4 as uuidv4 } from 'uuid';
+import {
+  addIngredient,
+  removeIngredient,
+  updateIngredientOrder,
+} from '../../services/burger-constructor';
 
 interface BurgerConstructorProps {
   ingredients: Ingredient[];
-  onIngredientDrop: (ingredient: Ingredient) => void;
-  onIngredientRemove: (ingredientId: string) => void;
+  onIngredientDrop: (ingredient: Ingredient) => void; // Обработка перетаскивания
+  onIngredientRemove: (ingredientId: string) => void; // Обработка удаления
 }
 
 export const BurgerConstructor: FC<BurgerConstructorProps> = ({
@@ -28,23 +32,23 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
   onIngredientRemove,
 }) => {
   const [isModalOpen, setModalOpen] = useState(false);
-  const [addedIngredients, setAddedIngredients] = useState<Ingredient[]>([]);
   const [bun, setBun] = useState<Ingredient | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   const error = useSelector((state: RootState) => state.order.error);
+  const addedIngredients = useSelector(
+    (state: RootState) => state.burgerConstructor
+  );
 
   const [{ canDrop, isOver }, drop] = useDrop({
     accept: 'ingredient',
     drop: (item: { ingredient: Ingredient }) => {
-      const ingredient = { ...item.ingredient, id: uuidv4() };
+      const ingredient = item.ingredient;
 
       if (ingredient.type === 'bun') {
         setBun(ingredient);
       } else {
-        setAddedIngredients((prev) => [...prev, ingredient]);
+        dispatch(addIngredient(ingredient));
       }
-
-      onIngredientDrop(ingredient);
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
@@ -61,17 +65,15 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
   };
 
   const handleRemoveIngredient = (ingredientId: string) => {
-    onIngredientRemove(ingredientId);
-    setAddedIngredients((prev) =>
-      prev.filter((ingredient) => ingredient.id !== ingredientId)
-    );
+    dispatch(removeIngredient(ingredientId));
   };
 
   const moveIngredient = (fromIndex: number, toIndex: number) => {
     const updatedIngredients = Array.from(addedIngredients);
     const [movedIngredient] = updatedIngredients.splice(fromIndex, 1);
     updatedIngredients.splice(toIndex, 0, movedIngredient);
-    setAddedIngredients(updatedIngredients);
+
+    dispatch(updateIngredientOrder(updatedIngredients));
   };
 
   const totalPrice = useMemo(() => {

@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchIngredients } from '../services/ingredients';
 import { AppHeader } from '../components/app-header/app-header';
@@ -9,38 +9,30 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import style from './app.module.scss';
 import { RootState, AppDispatch } from '../store';
 import { Ingredient } from '../utils/data';
+import {
+  addIngredient,
+  removeIngredient,
+} from '../services/burger-constructor';
 
 export const Index: FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const { ingredients, error } = useSelector(
     (state: RootState) => state.ingredients
   );
-  const [ingredientCounts, setIngredientCounts] = useState<
-    Record<string, number>
-  >({});
+  const { ingredientCounts } = useSelector(
+    (state: RootState) => state.burgerConstructor
+  ); // Изменения здесь
 
   useEffect(() => {
     dispatch(fetchIngredients());
   }, [dispatch]);
 
   const handleIngredientDrop = (ingredient: Ingredient) => {
-    setIngredientCounts((prevCounts) => {
-      const increment = ingredient.type === 'bun' ? 2 : 1;
-      return {
-        ...prevCounts,
-        [ingredient._id]: (prevCounts[ingredient._id] || 0) + increment,
-      };
-    });
+    dispatch(addIngredient(ingredient)); // Теперь просто вызываем Redux-экшн
   };
 
   const handleIngredientRemove = (ingredientId: string) => {
-    setIngredientCounts((prevCounts) => {
-      const newCounts = { ...prevCounts };
-      if (newCounts[ingredientId] > 0) {
-        newCounts[ingredientId] -= 1;
-      }
-      return newCounts;
-    });
+    dispatch(removeIngredient(ingredientId)); // Теперь просто вызываем Redux-экшн
   };
 
   if (error) {
@@ -53,7 +45,7 @@ export const Index: FC = () => {
       <div className={style.main}>
         <BurgerIngredients
           ingredients={ingredients}
-          ingredientCounts={ingredientCounts}
+          ingredientCounts={ingredientCounts} // Передаем счетчики из Redux
         />
         <BurgerConstructor
           ingredients={ingredients}

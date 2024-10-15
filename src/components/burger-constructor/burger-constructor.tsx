@@ -36,7 +36,7 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
   const dispatch = useDispatch<AppDispatch>();
   const error = useSelector((state: RootState) => state.order.error);
   const addedIngredients = useSelector(
-    (state: RootState) => state.burgerConstructor
+    (state: RootState) => state.burgerConstructor.ingredients
   );
 
   const [{ canDrop, isOver }, drop] = useDrop({
@@ -47,7 +47,7 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
       if (ingredient.type === 'bun') {
         setBun(ingredient);
       } else {
-        dispatch(addIngredient(ingredient));
+        onIngredientDrop(ingredient); // Вызов переданного обработчика
       }
     },
     collect: (monitor) => ({
@@ -65,7 +65,7 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
   };
 
   const handleRemoveIngredient = (ingredientId: string) => {
-    dispatch(removeIngredient(ingredientId));
+    onIngredientRemove(ingredientId); // Вызов переданного обработчика
   };
 
   const moveIngredient = (fromIndex: number, toIndex: number) => {

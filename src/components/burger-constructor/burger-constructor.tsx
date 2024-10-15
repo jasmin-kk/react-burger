@@ -43,11 +43,9 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
     accept: 'ingredient',
     drop: (item: { ingredient: Ingredient }) => {
       const ingredient = item.ingredient;
-
+      onIngredientDrop(ingredient); // Вызываем обработчик добавления
       if (ingredient.type === 'bun') {
-        setBun(ingredient);
-      } else {
-        onIngredientDrop(ingredient); // Вызов переданного обработчика
+        setBun(ingredient); // Устанавливаем булку
       }
     },
     collect: (monitor) => ({
@@ -55,7 +53,6 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
       canDrop: monitor.canDrop(),
     }),
   });
-
   const openModal = () => {
     setModalOpen(true);
   };

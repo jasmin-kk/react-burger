@@ -21,18 +21,18 @@ export const Index: FC = () => {
   );
   const { ingredientCounts } = useSelector(
     (state: RootState) => state.burgerConstructor
-  ); // Изменения здесь
+  );
 
   useEffect(() => {
     dispatch(fetchIngredients());
   }, [dispatch]);
 
   const handleIngredientDrop = (ingredient: Ingredient) => {
-    dispatch(addIngredient(ingredient)); // Теперь просто вызываем Redux-экшн
+    dispatch(addIngredient(ingredient));
   };
 
   const handleIngredientRemove = (ingredientId: string) => {
-    dispatch(removeIngredient(ingredientId)); // Теперь просто вызываем Redux-экшн
+    dispatch(removeIngredient(ingredientId));
   };
 
   if (error) {
@@ -45,7 +45,7 @@ export const Index: FC = () => {
       <div className={style.main}>
         <BurgerIngredients
           ingredients={ingredients}
-          ingredientCounts={ingredientCounts} // Передаем счетчики из Redux
+          ingredientCounts={ingredientCounts}
         />
         <BurgerConstructor
           ingredients={ingredients}

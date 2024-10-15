@@ -55,11 +55,7 @@ export const IngredientsGroup: FC<IngredientsGroupProps> = ({
   };
 
   return (
-    <div
-      ref={groupRef}
-      className={style.scroll}
-      style={{ overflowY: 'auto', maxHeight: '500px' }}
-    >
+    <div ref={groupRef} className={style.scroll}>
       {order.map(
         (type) =>
           groupedIngredients[type] && (

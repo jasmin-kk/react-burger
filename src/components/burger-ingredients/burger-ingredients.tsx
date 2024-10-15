@@ -18,7 +18,7 @@ export const BurgerIngredients: FC<BurgerIngredientsProps> = ({
   return (
     <div className={style.block}>
       <h1 className="text text_type_main-large mb-5">Соберите бургер</h1>
-      <div style={{ display: 'flex' }}>
+      <div className={style.df}>
         <Tab
           value="bun"
           active={current === 'bun'}

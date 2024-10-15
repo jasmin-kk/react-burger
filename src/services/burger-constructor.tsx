@@ -26,21 +26,21 @@ const burgerConstructorSlice = createSlice({
       prepare: (ingredient: Ingredient) => ({
         payload: {
           ...ingredient,
-          id: uuidv4(),
+          id: uuidv4(), // Keeping id for other purposes, but primarily use _id
         },
       }),
     },
     removeIngredient: (state, action: PayloadAction<string>) => {
       const ingredientId = action.payload;
       const ingredientIndex = state.ingredients.findIndex(
-        (ingredient) => ingredient.id === ingredientId
+        (ingredient) => ingredient._id === ingredientId // Use _id here
       );
 
       if (ingredientIndex > -1) {
         const ingredient = state.ingredients[ingredientIndex];
         const decrement = ingredient.type === 'bun' ? 2 : 1; // Уменьшаем счетчик
-        state.ingredientCounts[ingredientId] = Math.max(
-          (state.ingredientCounts[ingredientId] || 0) - decrement,
+        state.ingredientCounts[ingredient._id] = Math.max(
+          (state.ingredientCounts[ingredient._id] || 0) - decrement,
           0
         );
 

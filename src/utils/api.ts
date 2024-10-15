@@ -1,10 +1,9 @@
 export const BASE_URL = 'https://norma.nomoreparties.space/api';
 
-export const fetchIngredients = async () => {
-  const response = await fetch(`${BASE_URL}/ingredients`);
+export const checkResponse = async (response: any) => {
   if (!response.ok) {
-    throw new Error('Ошибка при загрузке данных');
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Ошибка при загрузке данных');
   }
-  const data = await response.json();
-  return data.data;
+  return response.json();
 };

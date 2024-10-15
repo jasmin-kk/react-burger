@@ -1,15 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { Ingredient } from '../utils/data';
-import { BASE_URL } from '../utils/api';
+import { BASE_URL, checkResponse } from '../utils/api';
 
 export const fetchIngredients = createAsyncThunk(
   'ingredients/fetchIngredients',
   async () => {
     const response = await fetch(`${BASE_URL}/ingredients`);
-    if (!response.ok) {
-      throw new Error('Ошибка при загрузке данных');
-    }
-    const data = await response.json();
+    const data = await checkResponse(response);
     return data.data;
   }
 );

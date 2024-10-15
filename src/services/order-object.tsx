@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { Order } from '../utils/data';
-import { BASE_URL } from '../utils/api';
+import { BASE_URL, checkResponse } from '../utils/api';
 
 interface OrderState {
   order: Order | null;
@@ -26,11 +26,7 @@ export const placeOrder = createAsyncThunk(
         body: JSON.stringify({ ingredients: ingredientsIds }),
       });
 
-      if (!response.ok) {
-        throw new Error('Ошибка при оформлении заказа');
-      }
-
-      const data = await response.json();
+      const data = await checkResponse(response);
       return data.order;
     } catch (err: unknown) {
       if (err instanceof Error) {

@@ -22,8 +22,8 @@ import {
 
 interface BurgerConstructorProps {
   ingredients: Ingredient[];
-  onIngredientDrop: (ingredient: Ingredient) => void; // Обработка перетаскивания
-  onIngredientRemove: (ingredientId: string) => void; // Обработка удаления
+  onIngredientDrop: (ingredient: Ingredient) => void;
+  onIngredientRemove: (ingredientId: string) => void;
 }
 
 export const BurgerConstructor: FC<BurgerConstructorProps> = ({
@@ -43,9 +43,9 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
     accept: 'ingredient',
     drop: (item: { ingredient: Ingredient }) => {
       const ingredient = item.ingredient;
-      onIngredientDrop(ingredient); // Вызываем обработчик добавления
+      onIngredientDrop(ingredient);
       if (ingredient.type === 'bun') {
-        setBun(ingredient); // Устанавливаем булку
+        setBun(ingredient);
       }
     },
     collect: (monitor) => ({
@@ -63,7 +63,7 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
   };
 
   const handleRemoveIngredient = (ingredientId: string) => {
-    onIngredientRemove(ingredientId); // Вызов переданного обработчика
+    onIngredientRemove(ingredientId);
   };
 
   const moveIngredient = (fromIndex: number, toIndex: number) => {
@@ -75,7 +75,7 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
   };
 
   const totalPrice = useMemo(() => {
-    const bunPrice = (bun?.price || 0) * 2; // Учитываем цену булок (верх и низ)
+    const bunPrice = (bun?.price || 0) * 2;
     const ingredientsPrice = addedIngredients.reduce(
       (sum, ingredient) => sum + ingredient.price,
       0
@@ -132,7 +132,7 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
 
       <div className={style.scroll}>
         {addedIngredients
-          .filter((ingredient) => ingredient.type !== 'bun') // Фильтруем ингредиенты
+          .filter((ingredient) => ingredient.type !== 'bun')
           .map((ingredient, index) => (
             <SortableIngredient
               key={ingredient.id}

@@ -53,6 +53,7 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
       canDrop: monitor.canDrop(),
     }),
   });
+
   const openModal = () => {
     setModalOpen(true);
   };
@@ -74,7 +75,7 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
   };
 
   const totalPrice = useMemo(() => {
-    const bunPrice = (bun?.price || 0) * 2;
+    const bunPrice = (bun?.price || 0) * 2; // Учитываем цену булок (верх и низ)
     const ingredientsPrice = addedIngredients.reduce(
       (sum, ingredient) => sum + ingredient.price,
       0
@@ -130,15 +131,17 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
       )}
 
       <div className={style.scroll}>
-        {addedIngredients.map((ingredient, index) => (
-          <SortableIngredient
-            key={ingredient.id}
-            ingredient={ingredient}
-            index={index}
-            moveIngredient={moveIngredient}
-            handleRemove={handleRemoveIngredient}
-          />
-        ))}
+        {addedIngredients
+          .filter((ingredient) => ingredient.type !== 'bun') // Фильтруем ингредиенты
+          .map((ingredient, index) => (
+            <SortableIngredient
+              key={ingredient.id}
+              ingredient={ingredient}
+              index={index}
+              moveIngredient={moveIngredient}
+              handleRemove={handleRemoveIngredient}
+            />
+          ))}
       </div>
 
       {bun && (

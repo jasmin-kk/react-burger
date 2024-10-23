@@ -1,4 +1,4 @@
-import React, {FC, ReactNode, useEffect} from 'react';
+import React, { FC, ReactNode, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import style from './modal.module.css';
 import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -35,6 +35,6 @@ export const Modal: FC<ModalProps> = ({ title, onClose, children }) => {
         <div className={style.content}>{children}</div>
       </div>
     </>,
-    document.getElementById('modal-root') as HTMLElement,
+    document.getElementById('modal-root') as HTMLElement
   );
 };

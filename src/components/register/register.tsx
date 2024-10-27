@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Button,
   Input,
@@ -58,8 +59,11 @@ export const Register: FC = () => {
           Зарегистрироваться
         </Button>
         <p className={`text text_type_main-default ${style.text}`}>
-          Уже зарегестрированы?
-          <a className={style.btn}> Войти</a>
+          Уже зарегистрированы?
+          <Link to="/login" className={style.btn}>
+            {' '}
+            Войти
+          </Link>
         </p>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import { Link } from 'react-router-dom';
 import style from './login.module.css';
 import {
   Button,
@@ -45,11 +46,17 @@ export const Login: FC = () => {
         </Button>
         <p className={`text text_type_main-default mb-4 ${style.text}`}>
           Вы — новый пользователь?
-          <a className={style.btn}> Зарегистрироваться</a>
+          <Link to="/register" className={style.btn}>
+            {' '}
+            Зарегистрироваться
+          </Link>
         </p>
         <p className={`text text_type_main-default mb-4 ${style.text}`}>
           Забыли пароль?
-          <a className={style.btn}> Восстановить пароль</a>
+          <Link to="/forgot-password" className={style.btn}>
+            {' '}
+            Восстановить пароль
+          </Link>
         </p>
       </div>
     </div>

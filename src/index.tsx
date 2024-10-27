@@ -8,6 +8,6 @@ const domNode = document.getElementById('root') as HTMLDivElement;
 const root = createRoot(domNode);
 root.render(
   <Provider store={store}>
-    <Index />;
+    <Index />
   </Provider>
 );

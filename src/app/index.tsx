@@ -1,59 +1,34 @@
 import React, { FC, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { fetchIngredients } from '../services/ingredients';
-import { AppHeader } from '../components/app-header/app-header';
-import { BurgerIngredients } from '../components/burger-ingredients/burger-ingredients';
-import { BurgerConstructor } from '../components/burger-constructor/burger-constructor';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import style from './app.module.scss';
-import { RootState, AppDispatch } from '../store';
-import { Ingredient } from '../utils/data';
-import {
-  addIngredient,
-  removeIngredient,
-} from '../services/burger-constructor';
+import { AppDispatch } from '../store';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { HomePage } from '../pages/home-page/home';
+import { ForgotPasswordPage } from '../pages/forgot-password';
+import { IngredientDetailsPage } from '../pages/ingredient-details';
+import { RegisterPage } from '../pages/register';
+import { LoginPage } from '../pages/login';
+import { ResetPasswordPage } from '../pages/reset-password';
+import { ProfilePage } from '../pages/profile';
 
 export const Index: FC = () => {
   const dispatch: AppDispatch = useDispatch();
-  const { ingredients, error } = useSelector(
-    (state: RootState) => state.ingredients
-  );
-  const { ingredientCounts } = useSelector(
-    (state: RootState) => state.burgerConstructor
-  );
 
   useEffect(() => {
     dispatch(fetchIngredients());
   }, [dispatch]);
 
-  const handleIngredientDrop = (ingredient: Ingredient) => {
-    dispatch(addIngredient(ingredient));
-  };
-
-  const handleIngredientRemove = (ingredientId: string) => {
-    dispatch(removeIngredient(ingredientId));
-  };
-
-  if (error) {
-    return <div>Ошибка: {error}</div>;
-  }
-
   return (
-    <DndProvider backend={HTML5Backend}>
-      <AppHeader />
-      <div className={style.main}>
-        <BurgerIngredients
-          ingredients={ingredients}
-          ingredientCounts={ingredientCounts}
-        />
-        <BurgerConstructor
-          ingredients={ingredients}
-          onIngredientDrop={handleIngredientDrop}
-          onIngredientRemove={handleIngredientRemove}
-        />
-        <div id="modal-root"></div>
-      </div>
-    </DndProvider>
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/ingredients/:id" element={<IngredientDetailsPage />} />
+      </Routes>
+    </Router>
   );
 };

@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../../services/auth';
 import style from './login.module.css';
 import {
@@ -9,23 +9,29 @@ import {
   PasswordInput,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import { AppDispatch } from '../../store';
+import { RootState } from '../../store'; // Импортируйте тип состояния
 
 export const Login: FC = () => {
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
+  const error = useSelector((state: RootState) => state.authSlice.error); // Получаем ошибку из состояния
 
   const handleLogin = async () => {
     const result = await dispatch(loginUser({ email, password: pass }));
     if (result.meta.requestStatus === 'fulfilled') {
-      navigate('/home');
+      navigate('/');
     }
   };
 
   return (
     <div className={style.main}>
       <h1 className="text text_type_main-large mb-6">Вход</h1>
+      {error && (
+        <p className="text text_type_main-default mb-4">{error}</p>
+      )}{' '}
+      {/* Сообщение об ошибке */}
       <Input
         type={'text'}
         placeholder={'E-mail'}

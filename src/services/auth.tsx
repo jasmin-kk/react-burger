@@ -132,18 +132,27 @@ export const fetchUserData = createAsyncThunk(
 export const updateUserData = createAsyncThunk(
   'auth/updateUserData',
   async (
-    userData: { name: string; email: string; password: string },
+    userData: { name: string; email: string; password: string }, // Убираем token из параметров
     { rejectWithValue }
   ) => {
+    const token = localStorage.getItem('accessToken'); // Извлекаем токен из localStorage
+    if (!token) {
+      return rejectWithValue('Токен доступа отсутствует'); // Обработка отсутствия токена
+    }
+
     const response = await fetch(
       'https://norma.nomoreparties.space/api/auth/user',
       {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `${localStorage.getItem('accessToken')}`,
+          Authorization: ` ${token}`, // Используем токен из localStorage
         },
-        body: JSON.stringify(userData),
+        body: JSON.stringify({
+          name: userData.name,
+          email: userData.email,
+          password: userData.password,
+        }),
       }
     );
 

@@ -11,7 +11,6 @@ import { AppDispatch, RootState } from '../../store';
 export const Profile: FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const user = useSelector((state: RootState) => state.authSlice.user);
-  const loading = useSelector((state: RootState) => state.authSlice.loading);
 
   const [name, setName] = React.useState('');
   const [email, setEmail] = React.useState('');
@@ -21,7 +20,6 @@ export const Profile: FC = () => {
   const [isPasswordFocused, setIsPasswordFocused] = React.useState(false);
 
   useEffect(() => {
-    // Получаем данные пользователя при монтировании компонента
     dispatch(fetchUserData());
   }, [dispatch]);
 
@@ -45,7 +43,19 @@ export const Profile: FC = () => {
   };
 
   const handleSave = () => {
-    dispatch(updateUserData({ name, email, password }));
+    // Создаем объект с данными пользователя без токена
+    const userData = { name, email, password };
+
+    // Диспетчируем обновление данных пользователя
+    dispatch(updateUserData(userData));
+  };
+
+  const handleCancel = () => {
+    if (user) {
+      setName(user.name);
+      setEmail(user.email);
+      setPassword(''); // Сброс пароля на пустую строку
+    }
   };
 
   return (
@@ -100,30 +110,25 @@ export const Profile: FC = () => {
           size="default"
           extraClass="ml-1"
         />
-        {(isNameFocused || isEmailFocused || isPasswordFocused) && (
-          <div className={style.btns}>
-            <Button
-              htmlType="button"
-              type="secondary"
-              size="medium"
-              onClick={() => {
-                setName(user?.name || '');
-                setEmail(user?.email || '');
-                setPassword('');
-              }}
-            >
-              Отмена
-            </Button>
-            <Button
-              htmlType="button"
-              type="primary"
-              size="medium"
-              onClick={handleSave}
-            >
-              Сохранить
-            </Button>
-          </div>
-        )}
+
+        <div className={style.btns}>
+          <Button
+            htmlType="button"
+            type="secondary"
+            size="medium"
+            onClick={handleCancel}
+          >
+            Отмена
+          </Button>
+          <Button
+            htmlType="button"
+            type="primary"
+            size="medium"
+            onClick={handleSave}
+          >
+            Сохранить
+          </Button>
+        </div>
       </div>
     </div>
   );

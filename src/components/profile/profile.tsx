@@ -1,17 +1,36 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Button,
   Input,
 } from '@ya.praktikum/react-developer-burger-ui-components';
+import { fetchUserData, updateUserData } from '../../services/auth';
 import style from './profile.module.css';
+import { AppDispatch, RootState } from '../../store';
 
 export const Profile: FC = () => {
+  const dispatch: AppDispatch = useDispatch();
+  const user = useSelector((state: RootState) => state.authSlice.user);
+  const loading = useSelector((state: RootState) => state.authSlice.loading);
+
   const [name, setName] = React.useState('');
-  const [login, setLogin] = React.useState('');
-  const [pass, setPass] = React.useState('');
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
   const [isNameFocused, setIsNameFocused] = React.useState(false);
-  const [isLoginFocused, setIsLoginFocused] = React.useState(false);
-  const [isPassFocused, setIsPassFocused] = React.useState(false);
+  const [isEmailFocused, setIsEmailFocused] = React.useState(false);
+  const [isPasswordFocused, setIsPasswordFocused] = React.useState(false);
+
+  useEffect(() => {
+    // Получаем данные пользователя при монтировании компонента
+    dispatch(fetchUserData());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (user) {
+      setName(user.name);
+      setEmail(user.email);
+    }
+  }, [user]);
 
   const handleFocus = (
     setter: React.Dispatch<React.SetStateAction<boolean>>
@@ -25,8 +44,8 @@ export const Profile: FC = () => {
     setter(false);
   };
 
-  const onChangePass = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPass(e.target.value);
+  const handleSave = () => {
+    dispatch(updateUserData({ name, email, password }));
   };
 
   return (
@@ -40,53 +59,67 @@ export const Profile: FC = () => {
       </div>
       <div className={style.inputs}>
         <Input
-          type={'text'}
-          placeholder={'Имя'}
+          type="text"
+          placeholder="Имя"
           onChange={(e) => setName(e.target.value)}
           icon={isNameFocused ? 'CloseIcon' : 'EditIcon'}
           value={name}
-          name={'name'}
+          name="name"
           error={false}
           onFocus={() => handleFocus(setIsNameFocused)}
           onBlur={() => handleBlur(setIsNameFocused)}
-          errorText={'Ошибка'}
-          size={'default'}
+          errorText="Ошибка"
+          size="default"
           extraClass="ml-1"
         />
         <Input
-          type={'text'}
-          placeholder={'Email'}
-          onChange={(e) => setLogin(e.target.value)}
-          icon={isLoginFocused ? 'CloseIcon' : 'EditIcon'}
-          value={login}
-          name={'email'}
+          type="text"
+          placeholder="Email"
+          onChange={(e) => setEmail(e.target.value)}
+          icon={isEmailFocused ? 'CloseIcon' : 'EditIcon'}
+          value={email}
+          name="email"
           error={false}
-          onFocus={() => handleFocus(setIsLoginFocused)}
-          onBlur={() => handleBlur(setIsLoginFocused)}
-          errorText={'Ошибка'}
-          size={'default'}
+          onFocus={() => handleFocus(setIsEmailFocused)}
+          onBlur={() => handleBlur(setIsEmailFocused)}
+          errorText="Ошибка"
+          size="default"
           extraClass="ml-1"
         />
         <Input
-          type={'password'}
-          placeholder={'Пароль'}
-          onChange={onChangePass}
-          icon={isPassFocused ? 'CloseIcon' : 'EditIcon'}
-          value={pass}
-          name={'password'}
+          type="password"
+          placeholder="Пароль"
+          onChange={(e) => setPassword(e.target.value)}
+          icon={isPasswordFocused ? 'CloseIcon' : 'EditIcon'}
+          value={password}
+          name="password"
           error={false}
-          onFocus={() => handleFocus(setIsPassFocused)}
-          onBlur={() => handleBlur(setIsPassFocused)}
-          errorText={'Ошибка'}
-          size={'default'}
+          onFocus={() => handleFocus(setIsPasswordFocused)}
+          onBlur={() => handleBlur(setIsPasswordFocused)}
+          errorText="Ошибка"
+          size="default"
           extraClass="ml-1"
         />
-        {(isPassFocused || isLoginFocused || isNameFocused) && (
+        {(isNameFocused || isEmailFocused || isPasswordFocused) && (
           <div className={style.btns}>
-            <Button htmlType="button" type="secondary" size="medium">
+            <Button
+              htmlType="button"
+              type="secondary"
+              size="medium"
+              onClick={() => {
+                setName(user?.name || '');
+                setEmail(user?.email || '');
+                setPassword('');
+              }}
+            >
               Отмена
             </Button>
-            <Button htmlType="button" type="primary" size="medium">
+            <Button
+              htmlType="button"
+              type="primary"
+              size="medium"
+              onClick={handleSave}
+            >
               Сохранить
             </Button>
           </div>

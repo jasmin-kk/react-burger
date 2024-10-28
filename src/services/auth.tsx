@@ -38,7 +38,10 @@ export const registerUser = createAsyncThunk(
         body: JSON.stringify(userData),
       }
     );
-    return response.json();
+
+    const data = await response.json();
+    localStorage.setItem('accessToken', data.accessToken); // Сохраняем accessToken
+    return data;
   }
 );
 
@@ -63,7 +66,9 @@ export const loginUser = createAsyncThunk(
       return rejectWithValue(errorData.message || 'Ошибка входа');
     }
 
-    return response.json();
+    const data = await response.json();
+    localStorage.setItem('accessToken', data.accessToken); // Сохраняем accessToken
+    return data;
   }
 );
 
@@ -99,6 +104,57 @@ export const refreshToken = createAsyncThunk(
   }
 );
 
+// Получение данных пользователя
+export const fetchUserData = createAsyncThunk(
+  'auth/fetchUserData',
+  async (_, { rejectWithValue }) => {
+    const token = localStorage.getItem('accessToken');
+    const response = await fetch(
+      'https://norma.nomoreparties.space/api/auth/user',
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: ` ${token}`, // Убедитесь, что токен корректен
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return rejectWithValue('Ошибка получения данных');
+    }
+
+    return response.json();
+  }
+);
+
+// Обновление данных пользователя
+export const updateUserData = createAsyncThunk(
+  'auth/updateUserData',
+  async (
+    userData: { name: string; email: string; password: string },
+    { rejectWithValue }
+  ) => {
+    const response = await fetch(
+      'https://norma.nomoreparties.space/api/auth/user',
+      {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${localStorage.getItem('accessToken')}`,
+        },
+        body: JSON.stringify(userData),
+      }
+    );
+
+    if (!response.ok) {
+      return rejectWithValue('Ошибка обновления данных');
+    }
+
+    return response.json();
+  }
+);
+
 const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -119,7 +175,7 @@ const authSlice = createSlice({
         state.refreshToken = action.payload.refreshToken;
         saveRefreshToken(action.payload.refreshToken);
         state.loading = false;
-        state.error = null; // Очищаем ошибку
+        state.error = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.user = action.payload.user;
@@ -141,6 +197,24 @@ const authSlice = createSlice({
       })
       .addCase(refreshToken.fulfilled, (state, action) => {
         state.accessToken = action.payload.accessToken; // Обновляем accessToken
+      })
+      .addCase(fetchUserData.fulfilled, (state, action) => {
+        state.user = action.payload.user;
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(fetchUserData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(updateUserData.fulfilled, (state, action) => {
+        state.user = action.payload.user;
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(updateUserData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
       });
   },
 });

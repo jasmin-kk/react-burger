@@ -1,19 +1,28 @@
-import React, { FC } from 'react';
-import { Link } from 'react-router-dom';
+import React, { FC, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { loginUser } from '../../services/auth';
 import style from './login.module.css';
 import {
   Button,
   Input,
   PasswordInput,
 } from '@ya.praktikum/react-developer-burger-ui-components';
+import { AppDispatch } from '../../store';
 
 export const Login: FC = () => {
-  const [email, setEmail] = React.useState('');
-  const emailRef = React.useRef(null);
-  const [pass, setPass] = React.useState('');
-  const onChange = (e: any) => {
-    setPass(e.target.value);
+  const [email, setEmail] = useState('');
+  const [pass, setPass] = useState('');
+  const dispatch: AppDispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogin = async () => {
+    const result = await dispatch(loginUser({ email, password: pass }));
+    if (result.meta.requestStatus === 'fulfilled') {
+      navigate('/home');
+    }
   };
+
   return (
     <div className={style.main}>
       <h1 className="text text_type_main-large mb-6">Вход</h1>
@@ -24,19 +33,18 @@ export const Login: FC = () => {
         value={email}
         name={'email'}
         error={false}
-        ref={emailRef}
-        errorText={'Ошибка'}
         size={'default'}
         extraClass="ml-1 mb-6"
       />
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <PasswordInput
-          onChange={onChange}
+          onChange={(e) => setPass(e.target.value)}
           value={pass}
           name={'password'}
           extraClass="mb-6"
         />
         <Button
+          onClick={handleLogin}
           htmlType="button"
           type="primary"
           size="medium"

@@ -1,19 +1,34 @@
 import React, { FC } from 'react';
 import {
+  Button,
   Input,
-  PasswordInput,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import style from './profile.module.css';
 
 export const Profile: FC = () => {
   const [name, setName] = React.useState('');
-  const nameRef = React.useRef(null);
   const [login, setLogin] = React.useState('');
-  const loginRef = React.useRef(null);
   const [pass, setPass] = React.useState('');
-  const onChange = (e: any) => {
+  const [isNameFocused, setIsNameFocused] = React.useState(false);
+  const [isLoginFocused, setIsLoginFocused] = React.useState(false);
+  const [isPassFocused, setIsPassFocused] = React.useState(false);
+
+  const handleFocus = (
+    setter: React.Dispatch<React.SetStateAction<boolean>>
+  ) => {
+    setter(true);
+  };
+
+  const handleBlur = (
+    setter: React.Dispatch<React.SetStateAction<boolean>>
+  ) => {
+    setter(false);
+  };
+
+  const onChangePass = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPass(e.target.value);
   };
+
   return (
     <div className={style.main}>
       <div className={style.menu}>
@@ -28,34 +43,54 @@ export const Profile: FC = () => {
           type={'text'}
           placeholder={'Имя'}
           onChange={(e) => setName(e.target.value)}
-          icon={'EditIcon'}
+          icon={isNameFocused ? 'CloseIcon' : 'EditIcon'}
           value={name}
           name={'name'}
           error={false}
-          ref={nameRef}
+          onFocus={() => handleFocus(setIsNameFocused)}
+          onBlur={() => handleBlur(setIsNameFocused)}
           errorText={'Ошибка'}
           size={'default'}
           extraClass="ml-1"
         />
         <Input
           type={'text'}
-          placeholder={'Имя'}
+          placeholder={'Email'}
           onChange={(e) => setLogin(e.target.value)}
-          icon={'EditIcon'}
+          icon={isLoginFocused ? 'CloseIcon' : 'EditIcon'}
           value={login}
-          name={'name'}
+          name={'email'}
           error={false}
-          ref={loginRef}
+          onFocus={() => handleFocus(setIsLoginFocused)}
+          onBlur={() => handleBlur(setIsLoginFocused)}
           errorText={'Ошибка'}
           size={'default'}
           extraClass="ml-1"
         />
-        <PasswordInput
-          onChange={onChange}
+        <Input
+          type={'password'}
+          placeholder={'Пароль'}
+          onChange={onChangePass}
+          icon={isPassFocused ? 'CloseIcon' : 'EditIcon'}
           value={pass}
           name={'password'}
-          icon="EditIcon"
+          error={false}
+          onFocus={() => handleFocus(setIsPassFocused)}
+          onBlur={() => handleBlur(setIsPassFocused)}
+          errorText={'Ошибка'}
+          size={'default'}
+          extraClass="ml-1"
         />
+        {(isPassFocused || isLoginFocused || isNameFocused) && (
+          <div className={style.btns}>
+            <Button htmlType="button" type="secondary" size="medium">
+              Отмена
+            </Button>
+            <Button htmlType="button" type="primary" size="medium">
+              Сохранить
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

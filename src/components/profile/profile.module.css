@@ -19,3 +19,9 @@
     flex-flow: column;
     grid-gap: 24px;
 }
+
+.btns{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}

@@ -9,14 +9,14 @@ import {
   PasswordInput,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import { AppDispatch } from '../../store';
-import { RootState } from '../../store'; // Импортируйте тип состояния
+import { RootState } from '../../store';
 
 export const Login: FC = () => {
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
-  const error = useSelector((state: RootState) => state.authSlice.error); // Получаем ошибку из состояния
+  const error = useSelector((state: RootState) => state.authSlice.error);
 
   const handleLogin = async () => {
     const result = await dispatch(loginUser({ email, password: pass }));

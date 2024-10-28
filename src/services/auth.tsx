@@ -21,12 +21,10 @@ const initialState: AuthState = {
   error: null,
 };
 
-// Сохранение refreshToken в localStorage
 const saveRefreshToken = (refreshToken: string) => {
   localStorage.setItem('refreshToken', refreshToken);
 };
 
-// Запрос на регистрацию
 export const registerUser = createAsyncThunk(
   'auth/registerUser',
   async (userData: { email: string; password: string; name: string }) => {
@@ -40,12 +38,11 @@ export const registerUser = createAsyncThunk(
     );
 
     const data = await response.json();
-    localStorage.setItem('accessToken', data.accessToken); // Сохраняем accessToken
+    localStorage.setItem('accessToken', data.accessToken);
     return data;
   }
 );
 
-// Запрос на авторизацию
 export const loginUser = createAsyncThunk(
   'auth/loginUser',
   async (
@@ -67,12 +64,11 @@ export const loginUser = createAsyncThunk(
     }
 
     const data = await response.json();
-    localStorage.setItem('accessToken', data.accessToken); // Сохраняем accessToken
+    localStorage.setItem('accessToken', data.accessToken);
     return data;
   }
 );
 
-// Запрос на выход из системы
 export const logoutUser = createAsyncThunk(
   'auth/logoutUser',
   async (refreshToken: string) => {
@@ -88,7 +84,6 @@ export const logoutUser = createAsyncThunk(
   }
 );
 
-// Запрос на обновление токена
 export const refreshToken = createAsyncThunk(
   'auth/refreshToken',
   async (token: string) => {
@@ -104,7 +99,6 @@ export const refreshToken = createAsyncThunk(
   }
 );
 
-// Получение данных пользователя
 export const fetchUserData = createAsyncThunk(
   'auth/fetchUserData',
   async (_, { rejectWithValue }) => {
@@ -115,7 +109,7 @@ export const fetchUserData = createAsyncThunk(
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: ` ${token}`, // Убедитесь, что токен корректен
+          Authorization: ` ${token}`,
         },
       }
     );
@@ -128,16 +122,15 @@ export const fetchUserData = createAsyncThunk(
   }
 );
 
-// Обновление данных пользователя
 export const updateUserData = createAsyncThunk(
   'auth/updateUserData',
   async (
-    userData: { name: string; email: string; password: string }, // Убираем token из параметров
+    userData: { name: string; email: string; password: string },
     { rejectWithValue }
   ) => {
-    const token = localStorage.getItem('accessToken'); // Извлекаем токен из localStorage
+    const token = localStorage.getItem('accessToken');
     if (!token) {
-      return rejectWithValue('Токен доступа отсутствует'); // Обработка отсутствия токена
+      return rejectWithValue('Токен доступа отсутствует');
     }
 
     const response = await fetch(
@@ -146,7 +139,7 @@ export const updateUserData = createAsyncThunk(
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: ` ${token}`, // Используем токен из localStorage
+          Authorization: ` ${token}`,
         },
         body: JSON.stringify({
           name: userData.name,
@@ -205,7 +198,7 @@ const authSlice = createSlice({
         localStorage.removeItem('refreshToken');
       })
       .addCase(refreshToken.fulfilled, (state, action) => {
-        state.accessToken = action.payload.accessToken; // Обновляем accessToken
+        state.accessToken = action.payload.accessToken;
       })
       .addCase(fetchUserData.fulfilled, (state, action) => {
         state.user = action.payload.user;

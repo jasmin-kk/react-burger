@@ -43,10 +43,8 @@ export const Profile: FC = () => {
   };
 
   const handleSave = () => {
-    // Создаем объект с данными пользователя без токена
     const userData = { name, email, password };
 
-    // Диспетчируем обновление данных пользователя
     dispatch(updateUserData(userData));
   };
 
@@ -54,7 +52,7 @@ export const Profile: FC = () => {
     if (user) {
       setName(user.name);
       setEmail(user.email);
-      setPassword(''); // Сброс пароля на пустую строку
+      setPassword('');
     }
   };
 

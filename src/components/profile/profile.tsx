@@ -4,13 +4,15 @@ import {
   Button,
   Input,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { fetchUserData, updateUserData } from '../../services/auth';
-import style from './profile.module.css';
+import { fetchUserData, updateUserData, logoutUser } from '../../services/auth';
 import { AppDispatch, RootState } from '../../store';
+import { useNavigate } from 'react-router-dom';
+import style from './profile.module.css';
 
 export const Profile: FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const user = useSelector((state: RootState) => state.authSlice.user);
+  const navigate = useNavigate();
 
   const [name, setName] = React.useState('');
   const [email, setEmail] = React.useState('');
@@ -44,7 +46,6 @@ export const Profile: FC = () => {
 
   const handleSave = () => {
     const userData = { name, email, password };
-
     dispatch(updateUserData(userData));
   };
 
@@ -56,6 +57,16 @@ export const Profile: FC = () => {
     }
   };
 
+  const handleLogout = async () => {
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (refreshToken) {
+      await dispatch(logoutUser(refreshToken));
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      navigate('/');
+    }
+  };
+
   return (
     <div className={style.main}>
       <div className={style.menu}>
@@ -63,7 +74,12 @@ export const Profile: FC = () => {
         <a className="text text_type_main-medium text_color_inactive">
           История заказов
         </a>
-        <a className="text text_type_main-medium text_color_inactive">Выход</a>
+        <a
+          className="text text_type_main-medium text_color_inactive"
+          onClick={handleLogout}
+        >
+          Выход
+        </a>
       </div>
       <div className={style.inputs}>
         <Input
@@ -108,7 +124,6 @@ export const Profile: FC = () => {
           size="default"
           extraClass="ml-1"
         />
-
         <div className={style.btns}>
           <Button
             htmlType="button"

@@ -7,6 +7,7 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { forgotPassword } from '../../services/reset-password';
+import { setHasRequestedPasswordReset } from '../../services/auth';
 import { AppDispatch, RootState } from '../../store';
 
 export const ForgotPassword: FC = () => {
@@ -20,6 +21,7 @@ export const ForgotPassword: FC = () => {
   const handleSubmit = () => {
     dispatch(forgotPassword(email)).then((result: any) => {
       if (result.meta.requestStatus === 'fulfilled') {
+        dispatch(setHasRequestedPasswordReset(true));
         navigate('/reset-password');
       }
     });

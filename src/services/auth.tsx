@@ -1,5 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
+const saveRefreshToken = (refreshToken: string) => {
+  localStorage.setItem('refreshToken', refreshToken);
+};
+
 interface User {
   email: string;
   name: string;
@@ -11,6 +15,7 @@ interface AuthState {
   refreshToken: string | null;
   loading: boolean;
   error: string | null;
+  hasRequestedPasswordReset: boolean;
 }
 
 const initialState: AuthState = {
@@ -19,10 +24,7 @@ const initialState: AuthState = {
   refreshToken: null,
   loading: false,
   error: null,
-};
-
-const saveRefreshToken = (refreshToken: string) => {
-  localStorage.setItem('refreshToken', refreshToken);
+  hasRequestedPasswordReset: false,
 };
 
 export const registerUser = createAsyncThunk(
@@ -167,6 +169,10 @@ const authSlice = createSlice({
       state.refreshToken = null;
       state.loading = false;
       state.error = null;
+      state.hasRequestedPasswordReset = false;
+    },
+    setHasRequestedPasswordReset: (state, action) => {
+      state.hasRequestedPasswordReset = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -221,6 +227,7 @@ const authSlice = createSlice({
   },
 });
 
-export const { clearAuthState } = authSlice.actions;
+export const { clearAuthState, setHasRequestedPasswordReset } =
+  authSlice.actions;
 
 export default authSlice.reducer;

@@ -63,7 +63,7 @@ export const Profile: FC = () => {
       await dispatch(logoutUser(refreshToken));
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
-      navigate('/');
+      navigate('/login');
     }
   };
 

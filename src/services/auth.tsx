@@ -83,6 +83,11 @@ export const logoutUser = createAsyncThunk(
         body: JSON.stringify({ token: refreshToken }),
       }
     );
+    if (response.ok) {
+      localStorage.removeItem('addedIngredients');
+      return response.json();
+    }
+
     return response.json();
   }
 );

@@ -20,6 +20,7 @@
     display: flex;
     align-items: center;
     cursor: pointer;
+    text-decoration: none;
 }
 
 .mainText{
@@ -27,8 +28,13 @@
     display: flex;
     align-items: center;
     cursor: pointer;
+    text-decoration: none;
 }
 
 .block{
     display: flex;
+}
+
+.link {
+    text-decoration: none;
 }

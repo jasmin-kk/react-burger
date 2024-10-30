@@ -18,10 +18,13 @@ export const placeOrder = createAsyncThunk(
   'order/placeOrder',
   async (ingredientsIds: string[], { rejectWithValue }) => {
     try {
+      const accessToken = localStorage.getItem('accessToken');
+
       const response = await fetch(`${BASE_URL}/orders`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: accessToken ? `${accessToken}` : '',
         },
         body: JSON.stringify({ ingredients: ingredientsIds }),
       });

@@ -14,11 +14,8 @@ import { placeOrder } from '../../services/order-object';
 import { RootState } from '../../store';
 import { AppDispatch } from '../../store';
 import { SortableIngredient } from './sortable-ingredient/sortable-ingredient';
-import {
-  addIngredient,
-  removeIngredient,
-  updateIngredientOrder,
-} from '../../services/burger-constructor';
+import { updateIngredientOrder } from '../../services/burger-constructor';
+import { useNavigate } from 'react-router-dom'; // Импортируем useNavigate
 
 interface BurgerConstructorProps {
   ingredients: Ingredient[];
@@ -33,11 +30,15 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
 }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [bun, setBun] = useState<Ingredient | null>(null);
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch: AppDispatch = useDispatch();
   const error = useSelector((state: RootState) => state.order.error);
   const addedIngredients = useSelector(
     (state: RootState) => state.burgerConstructor.ingredients
   );
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.authSlice.user
+  );
+  const navigate = useNavigate();
 
   const [{ canDrop, isOver }, drop] = useDrop({
     accept: 'ingredient',
@@ -93,10 +94,14 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
       return;
     }
 
-    dispatch(placeOrder(ingredientsIds))
-      .unwrap()
-      .then(() => openModal())
-      .catch((error) => console.error('Ошибка оформления заказа:', error));
+    if (isAuthenticated) {
+      dispatch(placeOrder(ingredientsIds))
+        .unwrap()
+        .then(() => openModal())
+        .catch((error) => console.error('Ошибка оформления заказа:', error));
+    } else {
+      navigate('/login');
+    }
   };
 
   useEffect(() => {

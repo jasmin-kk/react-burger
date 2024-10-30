@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { useNavigate } from 'react-router-dom';
 
 const saveRefreshToken = (refreshToken: string) => {
   localStorage.setItem('refreshToken', refreshToken);
@@ -117,7 +118,11 @@ export const fetchUserData = createAsyncThunk(
     );
 
     if (!response.ok) {
-      return rejectWithValue('Ошибка получения данных');
+      const errorData = await response.json();
+      if (errorData.message === 'jwt expired') {
+        useNavigate()('/login');
+      }
+      return rejectWithValue(errorData.message || 'Ошибка получения данных');
     }
 
     return response.json();
@@ -141,7 +146,7 @@ export const updateUserData = createAsyncThunk(
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: ` ${token}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           name: userData.name,

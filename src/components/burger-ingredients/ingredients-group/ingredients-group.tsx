@@ -7,8 +7,7 @@ import {
 import { IngredientItem } from '../ingredient-item/ingredient-item';
 import { Ingredient } from '../../../utils/data';
 import style from './ingredients-group.module.css';
-import { Modal } from '../../modal/modal';
-import { IngredientDetails } from '../ingredient-details/ingredient-details';
+import { Link, useLocation } from 'react-router-dom';
 
 interface IngredientsGroupProps {
   ingredients: Ingredient[];
@@ -53,6 +52,7 @@ export const IngredientsGroup: FC<IngredientsGroupProps> = ({
     sauce: 'Соусы',
     main: 'Начинки',
   };
+  const location = useLocation();
 
   return (
     <div ref={groupRef} className={style.scroll}>
@@ -65,25 +65,24 @@ export const IngredientsGroup: FC<IngredientsGroupProps> = ({
               </h2>
               <div className={style.list}>
                 {groupedIngredients[type].map((ingredient) => (
-                  <div
+                  <Link
                     key={ingredient._id}
+                    to={`/ingredients/${ingredient._id}`}
+                    state={{
+                      backgroundLocation: { location },
+                      ingredient: ingredient,
+                    }}
                     className={style.item}
-                    onClick={() => handleIngredientClick(ingredient)}
                   >
                     <IngredientItem
                       ingredient={ingredient}
                       count={ingredientCounts[ingredient._id] || 0}
                     />
-                  </div>
+                  </Link>
                 ))}
               </div>
             </div>
           )
-      )}
-      {isModalOpen && selectedIngredient && (
-        <Modal title={selectedIngredient.name} onClose={closeModal}>
-          <IngredientDetails ingredient={selectedIngredient} />
-        </Modal>
       )}
     </div>
   );

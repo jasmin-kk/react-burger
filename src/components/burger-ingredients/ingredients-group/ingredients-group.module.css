@@ -39,4 +39,6 @@
 .item {
     flex: 0 0 48%;
     margin: 1%;
+    text-decoration: none;
+    color: white;
 }

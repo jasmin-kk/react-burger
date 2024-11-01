@@ -44,7 +44,8 @@ export const Profile: FC = () => {
     setter(false);
   };
 
-  const handleSave = () => {
+  const handleSave = (e: React.FormEvent) => {
+    e.preventDefault();
     const userData = { name, email, password };
     dispatch(updateUserData(userData));
   };
@@ -81,7 +82,7 @@ export const Profile: FC = () => {
           Выход
         </a>
       </div>
-      <div className={style.inputs}>
+      <form className={style.inputs} onSubmit={handleSave}>
         <Input
           type="text"
           placeholder="Имя"
@@ -133,16 +134,11 @@ export const Profile: FC = () => {
           >
             Отмена
           </Button>
-          <Button
-            htmlType="button"
-            type="primary"
-            size="medium"
-            onClick={handleSave}
-          >
+          <Button htmlType="submit" type="primary" size="medium">
             Сохранить
           </Button>
         </div>
-      </div>
+      </form>
     </div>
   );
 };

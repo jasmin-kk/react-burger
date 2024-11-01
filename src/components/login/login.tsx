@@ -18,7 +18,8 @@ export const Login: FC = () => {
   const navigate = useNavigate();
   const error = useSelector((state: RootState) => state.authSlice.error);
 
-  const handleLogin = async () => {
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
     const result = await dispatch(loginUser({ email, password: pass }));
     if (result.meta.requestStatus === 'fulfilled') {
       navigate('/');
@@ -32,32 +33,33 @@ export const Login: FC = () => {
         <p className="text text_type_main-default mb-4">{error}</p>
       )}{' '}
       {/* Сообщение об ошибке */}
-      <Input
-        type={'text'}
-        placeholder={'E-mail'}
-        onChange={(e) => setEmail(e.target.value)}
-        value={email}
-        name={'email'}
-        error={false}
-        size={'default'}
-        extraClass="ml-1 mb-6"
-      />
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <PasswordInput
-          onChange={(e) => setPass(e.target.value)}
-          value={pass}
-          name={'password'}
-          extraClass="mb-6"
+      <form onSubmit={handleLogin}>
+        <Input
+          type={'text'}
+          placeholder={'E-mail'}
+          onChange={(e) => setEmail(e.target.value)}
+          value={email}
+          name={'email'}
+          error={false}
+          size={'default'}
+          extraClass="ml-1 mb-6"
         />
-        <Button
-          onClick={handleLogin}
-          htmlType="button"
-          type="primary"
-          size="medium"
-          extraClass={`mb-8 ${style.width}`}
-        >
-          Войти
-        </Button>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <PasswordInput
+            onChange={(e) => setPass(e.target.value)}
+            value={pass}
+            name={'password'}
+            extraClass="mb-6"
+          />
+          <Button
+            htmlType="submit"
+            type="primary"
+            size="medium"
+            extraClass={`mb-8 ${style.width}`}
+          >
+            Войти
+          </Button>
+        </div>
         <p className={`text text_type_main-default mb-4 ${style.text}`}>
           Вы — новый пользователь?
           <Link to="/register" className={style.btn}>
@@ -72,7 +74,7 @@ export const Login: FC = () => {
             Восстановить пароль
           </Link>
         </p>
-      </div>
+      </form>
     </div>
   );
 };

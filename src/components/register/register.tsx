@@ -17,7 +17,8 @@ export const Register: FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleRegister = async () => {
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
     const result = await dispatch(
       registerUser({ email, password: pass, name })
     );
@@ -27,7 +28,7 @@ export const Register: FC = () => {
   };
 
   return (
-    <div className={style.main}>
+    <form className={style.main} onSubmit={handleRegister}>
       <h1 className="text text_type_main-large mb-6">Регистрация</h1>
       <Input
         type={'text'}
@@ -56,14 +57,13 @@ export const Register: FC = () => {
         extraClass="mb-6"
       />
       <Button
-        onClick={handleRegister}
-        htmlType="button"
+        htmlType="submit"
         type="primary"
         size="medium"
         extraClass={`mb-8 ${style.width}`}
       >
         Зарегистрироваться
       </Button>
-    </div>
+    </form>
   );
 };

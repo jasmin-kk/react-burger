@@ -10,7 +10,9 @@ export const IngredientDetailsPage: FC = () => {
       <h1 className={`text text_type_main-large ${style.text}`}>
         Детали ингридиента
       </h1>
-      <IngredientDetails />
+      <div className={style.block}>
+        <IngredientDetails />
+      </div>
     </>
   );
 };

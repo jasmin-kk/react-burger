@@ -169,7 +169,7 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
           .filter((ingredient) => ingredient.type !== 'bun')
           .map((ingredient, index) => (
             <SortableIngredient
-              key={ingredient.id}
+              key={ingredient.id || index}
               ingredient={ingredient}
               index={index}
               moveIngredient={moveIngredient}

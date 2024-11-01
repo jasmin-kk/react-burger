@@ -6,6 +6,14 @@ const saveRefreshToken = (refreshToken: string) => {
   localStorage.setItem('refreshToken', refreshToken);
 };
 
+const checkResponse = async (response: Response) => {
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Ошибка сервера');
+  }
+  return response.json();
+};
+
 interface User {
   email: string;
   name: string;
@@ -32,13 +40,13 @@ const initialState: AuthState = {
 export const registerUser = createAsyncThunk(
   'auth/registerUser',
   async (userData: { email: string; password: string; name: string }) => {
-    const response = await fetch(`{${BASE_URL}/auth/register}`, {
+    const response = await fetch(`${BASE_URL}/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData),
     });
 
-    const data = await response.json();
+    const data = await checkResponse(response);
     localStorage.setItem('accessToken', data.accessToken);
     return data;
   }
@@ -56,14 +64,13 @@ export const loginUser = createAsyncThunk(
       body: JSON.stringify(userData),
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      return rejectWithValue(errorData.message || 'Ошибка входа');
+    try {
+      const data = await checkResponse(response);
+      localStorage.setItem('accessToken', data.accessToken);
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
     }
-
-    const data = await response.json();
-    localStorage.setItem('accessToken', data.accessToken);
-    return data;
   }
 );
 
@@ -75,11 +82,9 @@ export const logoutUser = createAsyncThunk(
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token: refreshToken }),
     });
-    if (response.ok) {
-      localStorage.removeItem('addedIngredients');
-      return response.json();
-    }
 
+    await checkResponse(response);
+    localStorage.removeItem('addedIngredients');
     return response.json();
   }
 );
@@ -92,7 +97,7 @@ export const refreshToken = createAsyncThunk(
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token }),
     });
-    return response.json();
+    return checkResponse(response);
   }
 );
 
@@ -108,15 +113,15 @@ export const fetchUserData = createAsyncThunk(
       },
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      if (errorData.message === 'jwt expired') {
+    try {
+      const data = await checkResponse(response);
+      return data;
+    } catch (error: any) {
+      if (error.message === 'jwt expired') {
         useNavigate()('/login');
       }
-      return rejectWithValue(errorData.message || 'Ошибка получения данных');
+      return rejectWithValue(error.message);
     }
-
-    return response.json();
   }
 );
 
@@ -137,18 +142,11 @@ export const updateUserData = createAsyncThunk(
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({
-        name: userData.name,
-        email: userData.email,
-        password: userData.password,
-      }),
+      body: JSON.stringify(userData),
     });
 
-    if (!response.ok) {
-      return rejectWithValue('Ошибка обновления данных');
-    }
-
-    return response.json();
+    const data = await checkResponse(response);
+    return data;
   }
 );
 

@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { useNavigate } from 'react-router-dom';
+import { BASE_URL } from '../utils/api';
 
 const saveRefreshToken = (refreshToken: string) => {
   localStorage.setItem('refreshToken', refreshToken);
@@ -31,14 +32,11 @@ const initialState: AuthState = {
 export const registerUser = createAsyncThunk(
   'auth/registerUser',
   async (userData: { email: string; password: string; name: string }) => {
-    const response = await fetch(
-      'https://norma.nomoreparties.space/api/auth/register',
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(userData),
-      }
-    );
+    const response = await fetch(`{${BASE_URL}/auth/register}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(userData),
+    });
 
     const data = await response.json();
     localStorage.setItem('accessToken', data.accessToken);
@@ -52,14 +50,11 @@ export const loginUser = createAsyncThunk(
     userData: { email: string; password: string },
     { rejectWithValue }
   ) => {
-    const response = await fetch(
-      'https://norma.nomoreparties.space/api/auth/login',
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(userData),
-      }
-    );
+    const response = await fetch(`${BASE_URL}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(userData),
+    });
 
     if (!response.ok) {
       const errorData = await response.json();
@@ -75,14 +70,11 @@ export const loginUser = createAsyncThunk(
 export const logoutUser = createAsyncThunk(
   'auth/logoutUser',
   async (refreshToken: string) => {
-    const response = await fetch(
-      'https://norma.nomoreparties.space/api/auth/logout',
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token: refreshToken }),
-      }
-    );
+    const response = await fetch(`${BASE_URL}/auth/logout`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: refreshToken }),
+    });
     if (response.ok) {
       localStorage.removeItem('addedIngredients');
       return response.json();
@@ -95,14 +87,11 @@ export const logoutUser = createAsyncThunk(
 export const refreshToken = createAsyncThunk(
   'auth/refreshToken',
   async (token: string) => {
-    const response = await fetch(
-      'https://norma.nomoreparties.space/api/auth/token',
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token }),
-      }
-    );
+    const response = await fetch(`${BASE_URL}/auth/token`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token }),
+    });
     return response.json();
   }
 );
@@ -111,16 +100,13 @@ export const fetchUserData = createAsyncThunk(
   'auth/fetchUserData',
   async (_, { rejectWithValue }) => {
     const token = localStorage.getItem('accessToken');
-    const response = await fetch(
-      'https://norma.nomoreparties.space/api/auth/user',
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: ` ${token}`,
-        },
-      }
-    );
+    const response = await fetch(`${BASE_URL}/auth/user`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: ` ${token}`,
+      },
+    });
 
     if (!response.ok) {
       const errorData = await response.json();
@@ -145,21 +131,18 @@ export const updateUserData = createAsyncThunk(
       return rejectWithValue('Токен доступа отсутствует');
     }
 
-    const response = await fetch(
-      'https://norma.nomoreparties.space/api/auth/user',
-      {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          name: userData.name,
-          email: userData.email,
-          password: userData.password,
-        }),
-      }
-    );
+    const response = await fetch(`${BASE_URL}/auth/user`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        name: userData.name,
+        email: userData.email,
+        password: userData.password,
+      }),
+    });
 
     if (!response.ok) {
       return rejectWithValue('Ошибка обновления данных');

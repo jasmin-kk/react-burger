@@ -1,4 +1,5 @@
 import React from 'react';
+import { NavLink, useLocation } from 'react-router-dom'; // Импортируем NavLink и useLocation
 import style from './app-header.module.css';
 import {
   BurgerIcon,
@@ -8,30 +9,56 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 
 export const AppHeader = () => {
+  const location = useLocation();
+
   return (
     <div className={style.background}>
       <header className={style.header}>
         <div className={style.block}>
-          <a
-            className={`pl-5 pr-5 pb-5 m-2 pt-5 text text_type_main-default ${style.mainText}`}
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              `pl-5 pr-5 pb-5 m-2 pt-5 text text_type_main-default ${
+                isActive ? style.mainText : style.text
+              }`
+            }
           >
-            <BurgerIcon type="primary" className="m-2" />
+            <BurgerIcon
+              type={location.pathname === '/' ? 'primary' : 'secondary'}
+              className="m-2"
+            />
             Конструктор
-          </a>
-          <a
-            className={`pl-5 pr-5 pb-5 m-2 pt-5 text text_type_main-default ${style.text}`}
+          </NavLink>
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              `pl-5 pr-5 pb-5 m-2 pt-5 text text_type_main-default ${
+                isActive ? style.mainText : style.text
+              }`
+            }
           >
-            <ListIcon type="secondary" className="m-2" />
+            <ListIcon
+              type={location.pathname === '/orders' ? 'primary' : 'secondary'}
+              className="m-2"
+            />
             Лента заказов
-          </a>
+          </NavLink>
         </div>
         <Logo className={style.logo} />
-        <a
-          className={`pl-5 pr-5 pb-5 m-2 pt-5 text text_type_main-default ${style.text}`}
+        <NavLink
+          to="/profile"
+          className={({ isActive }) =>
+            `pl-5 pr-5 pb-5 m-2 pt-5 text text_type_main-default ${
+              isActive ? style.mainText : style.text
+            }`
+          }
         >
-          <ProfileIcon type="secondary" className="m-2" />
+          <ProfileIcon
+            type={location.pathname === '/profile' ? 'primary' : 'secondary'}
+            className="m-2"
+          />
           Личный кабинет
-        </a>
+        </NavLink>
       </header>
     </div>
   );

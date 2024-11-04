@@ -1,0 +1,21 @@
+.main{
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    margin-top: 10%;
+}
+
+.btn{
+    color: #4C4CFF;
+}
+
+.width{
+    width: 130px;
+    margin-left: 35%;
+}
+
+.text{
+    color: #8585AD;
+    text-align: center;
+}
+

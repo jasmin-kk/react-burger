@@ -14,11 +14,8 @@ import { placeOrder } from '../../services/order-object';
 import { RootState } from '../../store';
 import { AppDispatch } from '../../store';
 import { SortableIngredient } from './sortable-ingredient/sortable-ingredient';
-import {
-  addIngredient,
-  removeIngredient,
-  updateIngredientOrder,
-} from '../../services/burger-constructor';
+import { updateIngredientOrder } from '../../services/burger-constructor';
+import { useNavigate } from 'react-router-dom';
 
 interface BurgerConstructorProps {
   ingredients: Ingredient[];
@@ -33,17 +30,44 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
 }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [bun, setBun] = useState<Ingredient | null>(null);
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch: AppDispatch = useDispatch();
   const error = useSelector((state: RootState) => state.order.error);
-  const addedIngredients = useSelector(
-    (state: RootState) => state.burgerConstructor.ingredients
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.authSlice.user
   );
+  const navigate = useNavigate();
+
+  const [addedIngredients, setAddedIngredients] = useState<Ingredient[]>([]);
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken');
+    const savedIngredients = localStorage.getItem('addedIngredients');
+
+    if (!accessToken) {
+      // Если токена нет, удаляем ингредиенты из localStorage
+      localStorage.removeItem('addedIngredients');
+    } else if (savedIngredients) {
+      const ingredientsFromStorage: Ingredient[] = JSON.parse(savedIngredients);
+      setAddedIngredients(ingredientsFromStorage);
+      const bunIngredient = ingredientsFromStorage.find(
+        (ing) => ing.type === 'bun'
+      );
+      if (bunIngredient) {
+        setBun(bunIngredient);
+      }
+    }
+  }, []);
 
   const [{ canDrop, isOver }, drop] = useDrop({
     accept: 'ingredient',
     drop: (item: { ingredient: Ingredient }) => {
       const ingredient = item.ingredient;
       onIngredientDrop(ingredient);
+      setAddedIngredients((prev) => {
+        const updated = [...prev, ingredient];
+        localStorage.setItem('addedIngredients', JSON.stringify(updated));
+        return updated;
+      });
       if (ingredient.type === 'bun') {
         setBun(ingredient);
       }
@@ -54,23 +78,29 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
     }),
   });
 
-  const openModal = () => {
-    setModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalOpen(false);
-  };
+  const openModal = () => setModalOpen(true);
+  const closeModal = () => setModalOpen(false);
 
   const handleRemoveIngredient = (ingredientId: string) => {
     onIngredientRemove(ingredientId);
+    setAddedIngredients((prev) => {
+      const updated = prev.filter(
+        (ingredient) => ingredient._id !== ingredientId
+      );
+      localStorage.setItem('addedIngredients', JSON.stringify(updated));
+      return updated;
+    });
   };
 
   const moveIngredient = (fromIndex: number, toIndex: number) => {
     const updatedIngredients = Array.from(addedIngredients);
     const [movedIngredient] = updatedIngredients.splice(fromIndex, 1);
     updatedIngredients.splice(toIndex, 0, movedIngredient);
-
+    setAddedIngredients(updatedIngredients);
+    localStorage.setItem(
+      'addedIngredients',
+      JSON.stringify(updatedIngredients)
+    );
     dispatch(updateIngredientOrder(updatedIngredients));
   };
 
@@ -93,10 +123,14 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
       return;
     }
 
-    dispatch(placeOrder(ingredientsIds))
-      .unwrap()
-      .then(() => openModal())
-      .catch((error) => console.error('Ошибка оформления заказа:', error));
+    if (isAuthenticated) {
+      dispatch(placeOrder(ingredientsIds))
+        .unwrap()
+        .then(() => openModal())
+        .catch((error) => console.error('Ошибка оформления заказа:', error));
+    } else {
+      navigate('/login');
+    }
   };
 
   useEffect(() => {
@@ -135,7 +169,7 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
           .filter((ingredient) => ingredient.type !== 'bun')
           .map((ingredient, index) => (
             <SortableIngredient
-              key={ingredient.id}
+              key={ingredient.id || index}
               ingredient={ingredient}
               index={index}
               moveIngredient={moveIngredient}

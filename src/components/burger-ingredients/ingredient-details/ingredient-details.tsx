@@ -1,17 +1,37 @@
-import React, {FC} from 'react';
+import React, { FC, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../store';
 import { Ingredient } from '../../../utils/data';
 import style from './ingredient-details.module.css';
 
-interface IngredientDetailsProps {
-  ingredient: Ingredient;
-}
+export const IngredientDetails: FC = () => {
+  const ingredients = useSelector(
+    (state: RootState) => state.ingredients.ingredients
+  );
+  const [ingredient, setIngredient] = useState<Ingredient | null>(null);
 
-export const IngredientDetails: FC<IngredientDetailsProps> = ({
-  ingredient,
-}) => {
+  useEffect(() => {
+    const pathParts = window.location.pathname.split('/');
+    const id = pathParts[pathParts.length - 1];
+
+    const foundIngredient = ingredients.find(
+      (ingredient) => ingredient._id === id
+    );
+
+    if (foundIngredient) {
+      setIngredient(foundIngredient);
+    } else {
+      console.error('Ингредиент не найден');
+    }
+  }, [ingredients]);
+
+  if (!ingredient) {
+    return <p>Ингредиент не найден.</p>;
+  }
+
   return (
     <div className={style.modal}>
-      <img src={ingredient.image_large} alt="ingredient" />
+      <img src={ingredient.image_large} alt="ингредиент" />
       <h3 className="text text_type_main-medium mt-4 mb-15">
         {ingredient.name}
       </h3>

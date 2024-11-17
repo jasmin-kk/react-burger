@@ -17,6 +17,8 @@ import { SortableIngredient } from './sortable-ingredient/sortable-ingredient';
 import { updateIngredientOrder } from '../../services/burger-constructor';
 import { useNavigate } from 'react-router-dom';
 
+const generateUniqueId = () => `${Date.now()}-${Math.random()}`;
+
 interface BurgerConstructorProps {
   ingredients: Ingredient[];
   onIngredientDrop: (ingredient: Ingredient) => void;
@@ -61,7 +63,7 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
   const [{ canDrop, isOver }, drop] = useDrop({
     accept: 'ingredient',
     drop: (item: { ingredient: Ingredient }) => {
-      const ingredient = item.ingredient;
+      const ingredient = { ...item.ingredient, id: generateUniqueId() };
       onIngredientDrop(ingredient);
       setAddedIngredients((prev) => {
         const updated = [...prev, ingredient];
@@ -85,7 +87,7 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
     onIngredientRemove(ingredientId);
     setAddedIngredients((prev) => {
       const updated = prev.filter(
-        (ingredient) => ingredient._id !== ingredientId
+        (ingredient) => ingredient.id !== ingredientId
       );
       localStorage.setItem('addedIngredients', JSON.stringify(updated));
       return updated;

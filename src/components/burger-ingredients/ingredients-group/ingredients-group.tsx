@@ -1,9 +1,4 @@
-import React, { FC, useMemo, useState, useRef } from 'react';
-import { useDispatch } from 'react-redux';
-import {
-  setIngredientDetails,
-  clearIngredientDetails,
-} from '../../../services/ingredient-details';
+import React, { FC, useMemo, useRef, useEffect } from 'react';
 import { IngredientItem } from '../ingredient-item/ingredient-item';
 import { Ingredient } from '../../../utils/data';
 import style from './ingredients-group.module.css';
@@ -20,24 +15,9 @@ export const IngredientsGroup: FC<IngredientsGroupProps> = ({
   ingredientCounts,
   onTabChange,
 }) => {
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [selectedIngredient, setSelectedIngredient] =
-    useState<Ingredient | null>(null);
-
-  const dispatch = useDispatch();
   const groupRef = useRef<HTMLDivElement>(null);
+  const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({}); // Для хранения ссылок на секции
 
-  const handleIngredientClick = (ingredient: Ingredient) => {
-    dispatch(setIngredientDetails(ingredient));
-    setSelectedIngredient(ingredient);
-    setModalOpen(true);
-  };
-
-  const closeModal = () => {
-    dispatch(clearIngredientDetails());
-    setModalOpen(false);
-    setSelectedIngredient(null);
-  };
   const groupedIngredients = useMemo(() => {
     return ingredients.reduce((acc, ingredient) => {
       (acc[ingredient.type] = acc[ingredient.type] || []).push(ingredient);
@@ -52,14 +32,48 @@ export const IngredientsGroup: FC<IngredientsGroupProps> = ({
     sauce: 'Соусы',
     main: 'Начинки',
   };
+
   const location = useLocation();
+
+  const handleScroll = () => {
+    const scrollPosition = groupRef.current?.scrollTop || 0;
+
+    for (const type of order) {
+      const section = sectionRefs.current[type];
+      if (section) {
+        const rect = section.getBoundingClientRect();
+        const isVisible = rect.top >= 0 && rect.top <= window.innerHeight;
+        if (isVisible) {
+          onTabChange(type);
+          break;
+        }
+      }
+    }
+  };
+
+  useEffect(() => {
+    const groupElement = groupRef.current;
+    if (groupElement) {
+      groupElement.addEventListener('scroll', handleScroll);
+    }
+
+    return () => {
+      if (groupElement) {
+        groupElement.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, []);
 
   return (
     <div ref={groupRef} className={style.scroll}>
       {order.map(
         (type) =>
           groupedIngredients[type] && (
-            <div key={type} className={style.block}>
+            <div
+              key={type}
+              ref={(el) => (sectionRefs.current[type] = el)} // Сохраняем ссылку на раздел
+              className={style.block}
+            >
               <h2 className="text text_type_main-medium">
                 {ingredientTypeTitles[type]}
               </h2>

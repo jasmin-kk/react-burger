@@ -22,10 +22,6 @@ export const HomePage: FC = () => {
     (state: RootState) => state.burgerConstructor
   );
 
-  useEffect(() => {
-    dispatch(fetchIngredients());
-  }, [dispatch]);
-
   const handleIngredientDrop = (ingredient: Ingredient) => {
     dispatch(addIngredient(ingredient));
   };

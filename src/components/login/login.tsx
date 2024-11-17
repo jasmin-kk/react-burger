@@ -44,7 +44,7 @@ export const Login: FC = () => {
           size={'default'}
           extraClass="ml-1 mb-6"
         />
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div className={style.block}>
           <PasswordInput
             onChange={(e) => setPass(e.target.value)}
             value={pass}

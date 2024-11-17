@@ -34,7 +34,7 @@ export const ResetPassword: FC = () => {
     <div className={style.main}>
       <h1 className="text text_type_main-large mb-6">Восстановление пароля</h1>
       <form onSubmit={handleSubmit}>
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div className={style.block}>
           <PasswordInput
             onChange={(e) => setPass(e.target.value)}
             value={pass}

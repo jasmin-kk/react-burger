@@ -52,7 +52,7 @@ export const ForgotPassword: FC = () => {
             Ссылка для восстановления пароля отправлена!
           </p>
         )}
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div className={style.block}>
           <Button
             htmlType="submit"
             type="primary"

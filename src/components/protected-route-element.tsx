@@ -1,6 +1,6 @@
 import React, { FC, ReactNode, useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store';
 import { refreshToken, fetchUserData } from '../services/auth';
 
@@ -11,9 +11,12 @@ interface ProtectedRouteElementProps {
 
 const ProtectedRouteElement: FC<ProtectedRouteElementProps> = ({
   children,
-  isProtected,
+  isProtected = false,
 }) => {
   const dispatch: AppDispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const user = useSelector((state: RootState) => state.authSlice.user);
   const accessToken = localStorage.getItem('accessToken');
   const refreshTokenValue = localStorage.getItem('refreshToken');
@@ -21,8 +24,9 @@ const ProtectedRouteElement: FC<ProtectedRouteElementProps> = ({
     (state: RootState) => state.authSlice.hasRequestedPasswordReset
   );
 
-  const [redirectToHome, setRedirectToHome] = useState(false);
   const [isChecking, setIsChecking] = useState(true);
+  const [redirectToHome, setRedirectToHome] = useState(false);
+
   const isAuthenticated = !!user || !!accessToken;
 
   useEffect(() => {
@@ -70,11 +74,14 @@ const ProtectedRouteElement: FC<ProtectedRouteElementProps> = ({
   }
 
   if (redirectToHome) {
-    return <Navigate to="/" />;
+    navigate('/', { replace: true });
+    return null;
   }
 
   if (isProtected && !isAuthenticated) {
-    return <Navigate to="/login" />;
+    localStorage.setItem('redirectPath', location.pathname);
+    navigate('/login', { replace: true });
+    return null;
   }
 
   if (
@@ -92,14 +99,13 @@ const ProtectedRouteElement: FC<ProtectedRouteElementProps> = ({
       window.location.pathname
     )
   ) {
-    return <Navigate to="/" />;
+    navigate('/', { replace: true });
+    return null;
   }
 
-  if (
-    window.location.pathname === '/reset-password' &&
-    !hasRequestedPasswordReset
-  ) {
-    return <Navigate to="/forgot-password" />;
+  if (location.pathname === '/reset-password' && !hasRequestedPasswordReset) {
+    navigate('/forgot-password', { replace: true });
+    return null;
   }
 
   return <>{children}</>;

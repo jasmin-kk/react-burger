@@ -65,13 +65,14 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
     drop: (item: { ingredient: Ingredient }) => {
       const ingredient = { ...item.ingredient, id: generateUniqueId() };
       onIngredientDrop(ingredient);
-      setAddedIngredients((prev) => {
-        const updated = [...prev, ingredient];
-        localStorage.setItem('addedIngredients', JSON.stringify(updated));
-        return updated;
-      });
       if (ingredient.type === 'bun') {
         setBun(ingredient);
+      } else {
+        setAddedIngredients((prev) => {
+          const updated = [...prev, ingredient];
+          localStorage.setItem('addedIngredients', JSON.stringify(updated));
+          return updated;
+        });
       }
     },
     collect: (monitor) => ({

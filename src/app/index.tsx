@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { fetchIngredients } from '../services/ingredients';
@@ -19,12 +19,30 @@ export const Index: FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const backgroundLocation = location.state?.backgroundLocation;
+
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
   const closeModal = () => {
     navigate(-1);
   };
+
   useEffect(() => {
-    dispatch(fetchIngredients());
+    const fetchData = async () => {
+      try {
+        await dispatch(fetchIngredients());
+      } catch (error) {
+        console.error('Error fetching ingredients:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
   }, [dispatch]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>

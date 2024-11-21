@@ -44,18 +44,21 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
   useEffect(() => {
     const accessToken = localStorage.getItem('accessToken');
     const savedIngredients = localStorage.getItem('addedIngredients');
+    const savedBun = localStorage.getItem('bunIngredient');
 
     if (!accessToken) {
-      // Если токена нет, удаляем ингредиенты из localStorage
       localStorage.removeItem('addedIngredients');
-    } else if (savedIngredients) {
-      const ingredientsFromStorage: Ingredient[] = JSON.parse(savedIngredients);
-      setAddedIngredients(ingredientsFromStorage);
-      const bunIngredient = ingredientsFromStorage.find(
-        (ing) => ing.type === 'bun'
-      );
-      if (bunIngredient) {
-        setBun(bunIngredient);
+      localStorage.removeItem('bunIngredient');
+    } else {
+      if (savedIngredients) {
+        const ingredientsFromStorage: Ingredient[] =
+          JSON.parse(savedIngredients);
+        setAddedIngredients(ingredientsFromStorage);
+      }
+
+      if (savedBun) {
+        const bunFromStorage: Ingredient = JSON.parse(savedBun);
+        setBun(bunFromStorage);
       }
     }
   }, []);
@@ -70,6 +73,7 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
           return;
         }
         setBun(ingredient);
+        localStorage.setItem('bunIngredient', JSON.stringify(ingredient));
       } else {
         setAddedIngredients((prev) => {
           const updated = [...prev, ingredient];

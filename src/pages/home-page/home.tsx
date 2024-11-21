@@ -22,17 +22,6 @@ export const HomePage: FC = () => {
     (state: RootState) => state.burgerConstructor
   );
 
-  const isAuthenticated = useSelector(
-    (state: RootState) =>
-      !!state.authSlice.user || !!localStorage.getItem('accessToken')
-  );
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      localStorage.setItem('redirectPath', window.location.pathname);
-    }
-  }, [isAuthenticated]);
-
   const handleIngredientDrop = (ingredient: Ingredient) => {
     dispatch(addIngredient(ingredient));
   };

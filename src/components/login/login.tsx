@@ -21,18 +21,15 @@ export const Login: FC = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = await dispatch(loginUser({ email, password: pass }));
-
-    if (result.meta.requestStatus === 'fulfilled') {
-      const redirectPath = localStorage.getItem('redirectPath') || '/';
-      localStorage.removeItem('redirectPath');
-      navigate(redirectPath, { replace: true });
-    }
   };
 
   return (
     <div className={style.main}>
       <h1 className="text text_type_main-large mb-6">Вход</h1>
-      {error && <p className="text text_type_main-default mb-4">{error}</p>}
+      {error && (
+        <p className="text text_type_main-default mb-4">{error}</p>
+      )}{' '}
+      {/* Сообщение об ошибке */}
       <form onSubmit={handleLogin}>
         <Input
           type={'text'}

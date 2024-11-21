@@ -51,28 +51,32 @@ export const Index: FC = () => {
         <Route
           path="/login"
           element={
-            <ProtectedRouteElement>{<LoginPage />}</ProtectedRouteElement>
+            <ProtectedRouteElement unknown={true}>
+              <LoginPage />
+            </ProtectedRouteElement>
           }
         />
         <Route
           path="/register"
           element={
-            <ProtectedRouteElement>{<RegisterPage />}</ProtectedRouteElement>
+            <ProtectedRouteElement unknown={true}>
+              <RegisterPage />
+            </ProtectedRouteElement>
           }
         />
         <Route
           path="/forgot-password"
           element={
-            <ProtectedRouteElement>
-              {<ForgotPasswordPage />}
+            <ProtectedRouteElement unknown={true}>
+              <ForgotPasswordPage />
             </ProtectedRouteElement>
           }
         />
         <Route
           path="/reset-password"
           element={
-            <ProtectedRouteElement>
-              {<ResetPasswordPage />}
+            <ProtectedRouteElement unknown={true}>
+              <ResetPasswordPage />
             </ProtectedRouteElement>
           }
         />
@@ -80,7 +84,7 @@ export const Index: FC = () => {
           path="/profile"
           element={
             <ProtectedRouteElement isProtected>
-              {<ProfilePage />}
+              <ProfilePage />
             </ProtectedRouteElement>
           }
         />

@@ -64,8 +64,11 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
     accept: 'ingredient',
     drop: (item: { ingredient: Ingredient }) => {
       const ingredient = { ...item.ingredient, id: generateUniqueId() };
-      onIngredientDrop(ingredient);
+
       if (ingredient.type === 'bun') {
+        if (bun && addedIngredients.length === 0) {
+          return;
+        }
         setBun(ingredient);
       } else {
         setAddedIngredients((prev) => {
@@ -74,6 +77,8 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
           return updated;
         });
       }
+
+      onIngredientDrop(ingredient);
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),

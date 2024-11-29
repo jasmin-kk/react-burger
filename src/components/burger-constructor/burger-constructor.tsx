@@ -17,6 +17,8 @@ import { SortableIngredient } from './sortable-ingredient/sortable-ingredient';
 import { updateIngredientOrder } from '../../services/burger-constructor';
 import { useNavigate } from 'react-router-dom';
 
+const generateUniqueId = () => `${Date.now()}-${Math.random()}`;
+
 interface BurgerConstructorProps {
   ingredients: Ingredient[];
   onIngredientDrop: (ingredient: Ingredient) => void;
@@ -42,18 +44,21 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
   useEffect(() => {
     const accessToken = localStorage.getItem('accessToken');
     const savedIngredients = localStorage.getItem('addedIngredients');
+    const savedBun = localStorage.getItem('bunIngredient');
 
     if (!accessToken) {
-      // Если токена нет, удаляем ингредиенты из localStorage
       localStorage.removeItem('addedIngredients');
-    } else if (savedIngredients) {
-      const ingredientsFromStorage: Ingredient[] = JSON.parse(savedIngredients);
-      setAddedIngredients(ingredientsFromStorage);
-      const bunIngredient = ingredientsFromStorage.find(
-        (ing) => ing.type === 'bun'
-      );
-      if (bunIngredient) {
-        setBun(bunIngredient);
+      localStorage.removeItem('bunIngredient');
+    } else {
+      if (savedIngredients) {
+        const ingredientsFromStorage: Ingredient[] =
+          JSON.parse(savedIngredients);
+        setAddedIngredients(ingredientsFromStorage);
+      }
+
+      if (savedBun) {
+        const bunFromStorage: Ingredient = JSON.parse(savedBun);
+        setBun(bunFromStorage);
       }
     }
   }, []);
@@ -61,16 +66,23 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
   const [{ canDrop, isOver }, drop] = useDrop({
     accept: 'ingredient',
     drop: (item: { ingredient: Ingredient }) => {
-      const ingredient = item.ingredient;
-      onIngredientDrop(ingredient);
-      setAddedIngredients((prev) => {
-        const updated = [...prev, ingredient];
-        localStorage.setItem('addedIngredients', JSON.stringify(updated));
-        return updated;
-      });
+      const ingredient = { ...item.ingredient, id: generateUniqueId() };
+
       if (ingredient.type === 'bun') {
+        if (bun && addedIngredients.length === 0) {
+          return;
+        }
         setBun(ingredient);
+        localStorage.setItem('bunIngredient', JSON.stringify(ingredient));
+      } else {
+        setAddedIngredients((prev) => {
+          const updated = [...prev, ingredient];
+          localStorage.setItem('addedIngredients', JSON.stringify(updated));
+          return updated;
+        });
       }
+
+      onIngredientDrop(ingredient);
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
@@ -85,7 +97,7 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
     onIngredientRemove(ingredientId);
     setAddedIngredients((prev) => {
       const updated = prev.filter(
-        (ingredient) => ingredient._id !== ingredientId
+        (ingredient) => ingredient.id !== ingredientId
       );
       localStorage.setItem('addedIngredients', JSON.stringify(updated));
       return updated;

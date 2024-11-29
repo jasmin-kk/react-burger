@@ -1,7 +1,6 @@
 import React, { FC, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchIngredients } from '../../services/ingredients';
-import { AppHeader } from '../../components/app-header/app-header';
 import { BurgerIngredients } from '../../components/burger-ingredients/burger-ingredients';
 import { BurgerConstructor } from '../../components/burger-constructor/burger-constructor';
 import { DndProvider } from 'react-dnd';
@@ -23,10 +22,6 @@ export const HomePage: FC = () => {
     (state: RootState) => state.burgerConstructor
   );
 
-  useEffect(() => {
-    dispatch(fetchIngredients());
-  }, [dispatch]);
-
   const handleIngredientDrop = (ingredient: Ingredient) => {
     dispatch(addIngredient(ingredient));
   };
@@ -41,7 +36,6 @@ export const HomePage: FC = () => {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <AppHeader />
       <div className={style.main}>
         <BurgerIngredients
           ingredients={ingredients}

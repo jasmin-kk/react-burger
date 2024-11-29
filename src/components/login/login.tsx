@@ -21,9 +21,6 @@ export const Login: FC = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = await dispatch(loginUser({ email, password: pass }));
-    if (result.meta.requestStatus === 'fulfilled') {
-      navigate('/');
-    }
   };
 
   return (
@@ -44,7 +41,7 @@ export const Login: FC = () => {
           size={'default'}
           extraClass="ml-1 mb-6"
         />
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div className={style.block}>
           <PasswordInput
             onChange={(e) => setPass(e.target.value)}
             value={pass}

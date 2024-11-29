@@ -1,29 +1,34 @@
 import React, { FC, ReactNode, useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate, useLocation, Navigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store';
 import { refreshToken, fetchUserData } from '../services/auth';
 
-interface ProtectedRouteElementProps {
+interface ProtectedRouteProps {
   children: ReactNode;
+  unknown?: boolean;
   isProtected?: boolean;
 }
 
-const ProtectedRouteElement: FC<ProtectedRouteElementProps> = ({
+const ProtectedRoute: FC<ProtectedRouteProps> = ({
   children,
-  isProtected,
+  unknown = false,
+  isProtected = false,
 }) => {
   const dispatch: AppDispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const user = useSelector((state: RootState) => state.authSlice.user);
   const accessToken = localStorage.getItem('accessToken');
   const refreshTokenValue = localStorage.getItem('refreshToken');
-  const hasRequestedPasswordReset = useSelector(
-    (state: RootState) => state.authSlice.hasRequestedPasswordReset
-  );
 
-  const [redirectToHome, setRedirectToHome] = useState(false);
   const [isChecking, setIsChecking] = useState(true);
+  const [redirectToHome, setRedirectToHome] = useState(false);
+
   const isAuthenticated = !!user || !!accessToken;
+
+  const from = location.state?.from || '/';
 
   useEffect(() => {
     const checkToken = async () => {
@@ -36,13 +41,7 @@ const ProtectedRouteElement: FC<ProtectedRouteElementProps> = ({
           localStorage.removeItem('accessToken');
           localStorage.removeItem('refreshToken');
           setRedirectToHome(true);
-          setIsChecking(false);
-
-          return;
         }
-      } else {
-        setIsChecking(false);
-        return;
       }
 
       if (refreshTokenValue) {
@@ -55,8 +54,6 @@ const ProtectedRouteElement: FC<ProtectedRouteElementProps> = ({
           localStorage.removeItem('refreshToken');
           setRedirectToHome(true);
         }
-      } else {
-        return;
       }
 
       setIsChecking(false);
@@ -70,39 +67,18 @@ const ProtectedRouteElement: FC<ProtectedRouteElementProps> = ({
   }
 
   if (redirectToHome) {
-    return <Navigate to="/" />;
+    return <Navigate to="/" replace />;
   }
 
-  if (isProtected && !isAuthenticated) {
-    return <Navigate to="/login" />;
+  if (unknown && isAuthenticated) {
+    return <Navigate to={from} replace />;
   }
 
-  if (
-    !isAuthenticated &&
-    ['/login', '/register', '/forgot-password', '/reset-password'].includes(
-      window.location.pathname
-    )
-  ) {
-    return <>{children}</>;
-  }
-
-  if (
-    isAuthenticated &&
-    ['/login', '/register', '/forgot-password', '/reset-password'].includes(
-      window.location.pathname
-    )
-  ) {
-    return <Navigate to="/" />;
-  }
-
-  if (
-    window.location.pathname === '/reset-password' &&
-    !hasRequestedPasswordReset
-  ) {
-    return <Navigate to="/forgot-password" />;
+  if (!unknown && !isAuthenticated) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   return <>{children}</>;
 };
 
-export default ProtectedRouteElement;
+export default ProtectedRoute;

@@ -1,1 +1,1 @@
-# react-burger
+# react-burger app

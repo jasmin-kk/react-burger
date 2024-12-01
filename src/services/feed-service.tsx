@@ -1,18 +1,14 @@
-import {
-  createSlice,
-  createAsyncThunk,
-  configureStore,
-} from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 const SOCKET_URL = 'wss://norma.nomoreparties.space/orders/all';
 
 let socket: WebSocket | null = null;
 
-const socketMiddleware = (store: {
-  dispatch: (arg0: { payload: any; type: 'orders/updateOrders' }) => void;
-}) => {
-  return (next: any) => (action: any) => {
-    if (action.type === fetchOrders.pending) {
+export const socketMiddleware =
+  (store: { dispatch: (action: { type: string; payload?: any }) => void }) =>
+  (next: any) =>
+  (action: any) => {
+    if (action.type === fetchOrders.pending.type) {
       socket = new WebSocket(SOCKET_URL);
 
       socket.onopen = () => {
@@ -36,7 +32,7 @@ const socketMiddleware = (store: {
       };
     }
 
-    if (action.type === fetchOrders.rejected) {
+    if (action.type === fetchOrders.rejected.type) {
       if (socket) {
         socket.close();
       }
@@ -44,7 +40,6 @@ const socketMiddleware = (store: {
 
     return next(action);
   };
-};
 
 export const fetchOrders = createAsyncThunk('orders/fetchOrders', async () => {
   return new Promise<void>((resolve) => resolve());
@@ -82,13 +77,3 @@ const ordersSlice = createSlice({
 
 export const { updateOrders } = ordersSlice.actions;
 export default ordersSlice.reducer;
-
-const store = configureStore({
-  reducer: {
-    orders: ordersSlice.reducer,
-  },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(socketMiddleware),
-});
-
-export { store };

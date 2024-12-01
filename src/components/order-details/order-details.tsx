@@ -44,9 +44,10 @@ export const OrderDetails: FC = () => {
     }
   };
 
-  const { text: statusText, color: statusColor } = getStatusTextAndColor(
-    order.status
-  );
+  const statusTextAndColor = order
+    ? getStatusTextAndColor(order.status)
+    : { text: '', color: '' };
+  const { text: statusText, color: statusColor } = statusTextAndColor;
 
   const orderIngredients = order
     ? order.ingredients.map((ingredientId: string) =>

@@ -13,9 +13,10 @@ export const OrderDetails: FC = () => {
   const today = new Date();
 
   const [order, setOrder] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const orders = useSelector((state: any) => state.orders.orders);
-  const { ingredients, error } = useSelector((state: any) => state.ingredients);
+  const { ingredients } = useSelector((state: any) => state.ingredients);
 
   const pathParts = window.location.pathname.split('/');
   const orderId = pathParts[pathParts.length - 1];
@@ -25,12 +26,23 @@ export const OrderDetails: FC = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (orders.length > 0) {
-      const foundOrder = orders.find((order: any) => order._id === orderId);
-      if (foundOrder) {
-        setOrder(foundOrder);
-        console.log(foundOrder, 'foundOrder');
-      }
+    const foundOrder = orders.find((order: any) => order._id === orderId);
+    if (foundOrder) {
+      setOrder(foundOrder);
+    } else {
+      fetch(`https://norma.nomoreparties.space/api/orders/${orderId}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Order not found');
+          }
+          return response.json();
+        })
+        .then((data) => {
+          setOrder(data.orders[0]);
+        })
+        .catch((error) => {
+          setError(error.message);
+        });
     }
   }, [orders, orderId]);
 
@@ -85,7 +97,9 @@ export const OrderDetails: FC = () => {
 
   return (
     <div className={style.main}>
-      {order ? (
+      {error ? (
+        <p className="text text_type_main-medium">{error}</p>
+      ) : order ? (
         <>
           <p className={`text text_type_digits-default mb-8 ${style.center}`}>
             #{order.number}

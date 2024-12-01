@@ -4,16 +4,14 @@ import {
   Button,
   Input,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { fetchUserData, updateUserData, logoutUser } from '../../services/auth';
+import { fetchUserData, updateUserData } from '../../services/auth';
 import { AppDispatch, RootState } from '../../store';
-import { useNavigate } from 'react-router-dom';
 import style from './profile.module.css';
 import { MenuNav } from '../menu-nav/menu-nav';
 
 export const Profile: FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const user = useSelector((state: RootState) => state.authSlice.user);
-  const navigate = useNavigate();
 
   const [name, setName] = React.useState('');
   const [email, setEmail] = React.useState('');
@@ -56,16 +54,6 @@ export const Profile: FC = () => {
       setName(user.name);
       setEmail(user.email);
       setPassword('');
-    }
-  };
-
-  const handleLogout = async () => {
-    const refreshToken = localStorage.getItem('refreshToken');
-    if (refreshToken) {
-      await dispatch(logoutUser(refreshToken));
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      navigate('/login');
     }
   };
 

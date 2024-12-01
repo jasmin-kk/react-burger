@@ -50,7 +50,6 @@ const ProtectedRoute: FC<ProtectedRouteProps> = ({
         if (refreshResponse.meta.requestStatus === 'fulfilled') {
           await dispatch(fetchUserData());
         } else {
-          localStorage.removeItem('accessToken');
           localStorage.removeItem('refreshToken');
           setRedirectToHome(true);
         }

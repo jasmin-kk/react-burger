@@ -74,20 +74,12 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-export const logoutUser = createAsyncThunk(
-  'auth/logoutUser',
-  async (refreshToken: string) => {
-    const response = await fetch(`${BASE_URL}/auth/logout`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token: refreshToken }),
-    });
-
-    await checkResponse(response);
-    localStorage.removeItem('addedIngredients');
-    return response.json();
-  }
-);
+export const logoutUser = createAsyncThunk('auth/logoutUser', async () => {
+  localStorage.removeItem('accessToken');
+  localStorage.removeItem('refreshToken');
+  localStorage.removeItem('addedIngredients');
+  return;
+});
 
 export const refreshToken = createAsyncThunk(
   'auth/refreshToken',

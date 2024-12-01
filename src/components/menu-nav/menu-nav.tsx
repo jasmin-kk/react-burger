@@ -11,13 +11,8 @@ export const MenuNav: FC = () => {
   const location = useLocation(); // Get the current location (route)
 
   const handleLogout = async () => {
-    const refreshToken = localStorage.getItem('refreshToken');
-    if (refreshToken) {
-      await dispatch(logoutUser(refreshToken));
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      navigate('/login');
-    }
+    await dispatch(logoutUser());
+    navigate('/login');
   };
 
   const handleProfileClick = () => {

@@ -21,6 +21,10 @@ export const OrderCard: FC<OrderCardProps> = ({ order, ingredients }) => {
 
   const orderIngredients = getIngredientsById(order.ingredients);
 
+  const visibleIngredients = orderIngredients.slice(0, 5);
+  const extraIngredientsCount =
+    orderIngredients.length - visibleIngredients.length;
+
   return (
     <div className={style.main}>
       <div className={style.header}>
@@ -33,16 +37,27 @@ export const OrderCard: FC<OrderCardProps> = ({ order, ingredients }) => {
       <p className="text text_type_main-small m-6">{order.status}</p>
       <div className={style.bottom}>
         <div className={style.circleContainer}>
-          {orderIngredients.map((ingredient, index) =>
-            ingredient ? (
-              <div
-                key={ingredient._id}
-                className={style.circle}
-                style={{
-                  backgroundImage: `url(${ingredient.image})`,
-                }}
-              ></div>
-            ) : null
+          {visibleIngredients.map((ingredient, index) => (
+            <div
+              key={ingredient._id}
+              className={style.circle}
+              style={{
+                backgroundImage: `url(${ingredient.image})`,
+              }}
+            ></div>
+          ))}
+          {extraIngredientsCount > 0 && (
+            <div
+              key="extra"
+              className={`${style.circle} ${style.extra} text text_type_main-small`}
+              style={{
+                backgroundImage: `url(${
+                  visibleIngredients[visibleIngredients.length - 1]?.image
+                })`,
+              }}
+            >
+              +{extraIngredientsCount}
+            </div>
           )}
         </div>
         <div className={style.sum}>

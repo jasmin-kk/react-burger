@@ -8,9 +8,11 @@ interface Order {
 
 interface InfoProps {
   orders: Order[];
+  total: number;
+  totalToday: number;
 }
 
-export const Info: FC<InfoProps> = ({ orders }) => {
+export const Info: FC<InfoProps> = ({ orders, total, totalToday }) => {
   const limitedOrders = orders.slice(0, 10);
 
   const readyOrders = limitedOrders.filter((order) => order.status === 'done');
@@ -69,10 +71,11 @@ export const Info: FC<InfoProps> = ({ orders }) => {
         </div>
       </div>
 
+      {/* Общая информация о выполненных заказах */}
       <p className="text text_type_main-medium">Выполнено за все время:</p>
-      <p className="text text_type_digits-large mb-15">28 752</p>
+      <p className="text text_type_digits-large mb-15">{total}</p>
       <p className="text text_type_main-medium">Выполнено за сегодня:</p>
-      <p className="text text_type_digits-large">138</p>
+      <p className="text text_type_digits-large">{totalToday}</p>
     </div>
   );
 };

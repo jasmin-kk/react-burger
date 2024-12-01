@@ -11,8 +11,9 @@ const SOCKET_URL = 'wss://norma.nomoreparties.space/orders/all';
 export const Feed: FC = () => {
   const location = useLocation();
   const [orders, setOrders] = useState<any[]>([]);
+  const [total, setTotal] = useState<number>(0);
+  const [totalToday, setTotalToday] = useState<number>(0);
 
-  // Получаем ингредиенты из Redux state
   const { ingredients, error } = useSelector(
     (state: RootState) => state.ingredients
   );
@@ -30,6 +31,8 @@ export const Feed: FC = () => {
       if (data.success) {
         console.log('Полученные данные:', data);
         setOrders(data.orders);
+        setTotal(data.total);
+        setTotalToday(data.totalToday);
       }
     };
 
@@ -64,7 +67,7 @@ export const Feed: FC = () => {
             ))}
           </div>
         </div>
-        <Info orders={orders} />
+        <Info orders={orders} total={total} totalToday={totalToday} />
       </div>
     </div>
   );

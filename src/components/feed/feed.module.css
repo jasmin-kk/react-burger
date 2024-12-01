@@ -1,0 +1,17 @@
+.main{
+    align-items: center;
+    margin-top: 2%;
+    margin-left: 15%;
+}
+
+.block{
+    display: flex;
+    align-items: center;
+    margin-top: 2%;
+    margin-right: 15%;
+}
+
+.order{
+    width:45%;
+    margin-right: 10%;
+}

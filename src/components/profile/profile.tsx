@@ -8,6 +8,7 @@ import { fetchUserData, updateUserData, logoutUser } from '../../services/auth';
 import { AppDispatch, RootState } from '../../store';
 import { useNavigate } from 'react-router-dom';
 import style from './profile.module.css';
+import { MenuNav } from '../menu-nav/menu-nav';
 
 export const Profile: FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -70,18 +71,7 @@ export const Profile: FC = () => {
 
   return (
     <div className={style.main}>
-      <div className={style.menu}>
-        <a className={`text text_type_main-medium ${style.nav}`}>Профиль</a>
-        <a className="text text_type_main-medium text_color_inactive">
-          История заказов
-        </a>
-        <a
-          className="text text_type_main-medium text_color_inactive"
-          onClick={handleLogout}
-        >
-          Выход
-        </a>
-      </div>
+      <MenuNav></MenuNav>
       <form className={style.inputs} onSubmit={handleSave}>
         <Input
           type="text"

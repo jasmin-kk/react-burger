@@ -1,0 +1,9 @@
+.color{
+    color: #00CCCC;
+}
+
+.ready{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 60px;
+}

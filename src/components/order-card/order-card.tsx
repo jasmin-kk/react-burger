@@ -1,9 +1,6 @@
 import React, { FC } from 'react';
 import style from './order-card.module.css';
-import {
-  CurrencyIcon,
-  FormattedDate,
-} from '@ya.praktikum/react-developer-burger-ui-components';
+import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 
 interface OrderCardProps {
   order: any;
@@ -39,13 +36,27 @@ export const OrderCard: FC<OrderCardProps> = ({ order, ingredients }) => {
     order.status
   );
 
+  const formatDate = (date: string) => {
+    const orderDate = new Date(date);
+    const diffTime = today.getTime() - orderDate.getTime();
+    const diffDays = Math.floor(diffTime / (1000 * 3600 * 24));
+
+    if (diffDays < 0) {
+      return 'Сегодня';
+    } else if (diffDays === 0) {
+      return 'Сегодня';
+    } else if (diffDays === 1) {
+      return 'Вчера';
+    } else {
+      return `${diffDays} дня назад`;
+    }
+  };
+
   return (
     <div className={style.main}>
       <div className={style.header}>
         <span className="text text_type_main-default">#{order.number}</span>
-        <span className={style.date}>
-          <FormattedDate date={new Date(order.createdAt)} />
-        </span>
+        <span className={style.date}>{formatDate(order.createdAt)}</span>
       </div>
       <p className="text text_type_main-medium m-2">{order.name}</p>
       <p

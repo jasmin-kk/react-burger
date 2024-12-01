@@ -64,7 +64,7 @@ export const Feed: FC = () => {
             ))}
           </div>
         </div>
-        <Info />
+        <Info orders={orders} />
       </div>
     </div>
   );

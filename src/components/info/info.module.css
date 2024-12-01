@@ -2,8 +2,25 @@
     color: #00CCCC;
 }
 
-.ready{
+.ready {
     display: flex;
     justify-content: space-between;
     margin-bottom: 60px;
+    gap: 20px;
+}
+
+.ordersContainer {
+    display: flex;
+    gap: 20px;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.text {
+    font-size: 16px;
+    color: white;
 }

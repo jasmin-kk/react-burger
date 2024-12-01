@@ -4,7 +4,7 @@ import { OrderCard } from '../order-card/order-card';
 import { Info } from '../info/info';
 import { Link, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../store'; // Путь к вашему файлу с Redux store
+import { RootState } from '../../store';
 
 const SOCKET_URL = 'wss://norma.nomoreparties.space/orders/all';
 

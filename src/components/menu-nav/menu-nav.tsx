@@ -8,7 +8,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 export const MenuNav: FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation(); // Get the current location (route)
+  const location = useLocation();
 
   const handleLogout = async () => {
     await dispatch(logoutUser());

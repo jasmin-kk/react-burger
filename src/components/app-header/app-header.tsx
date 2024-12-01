@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, useLocation } from 'react-router-dom'; // Импортируем NavLink и useLocation
+import { NavLink, useLocation } from 'react-router-dom';
 import style from './app-header.module.css';
 import {
   BurgerIcon,

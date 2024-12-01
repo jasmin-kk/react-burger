@@ -121,7 +121,7 @@ export const OrderDetails: FC = () => {
                   <div
                     className={style.img}
                     style={{
-                      backgroundImage: `url(${ingredient.image})`, // Use the ingredient image from Redux
+                      backgroundImage: `url(${ingredient.image})`,
                     }}
                   />
                   <div className={style.end}>

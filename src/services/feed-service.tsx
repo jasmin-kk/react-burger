@@ -20,7 +20,6 @@ interface OrdersState {
   error: string | null;
 }
 
-// Мидлвар для работы с WebSocket
 export const socketMiddleware =
   (store: { dispatch: (action: { type: string; payload?: any }) => void }) =>
   (next: any) =>

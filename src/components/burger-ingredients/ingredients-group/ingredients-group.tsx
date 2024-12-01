@@ -16,7 +16,7 @@ export const IngredientsGroup: FC<IngredientsGroupProps> = ({
   onTabChange,
 }) => {
   const groupRef = useRef<HTMLDivElement>(null);
-  const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({}); // Для хранения ссылок на секции
+  const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   const groupedIngredients = useMemo(() => {
     return ingredients.reduce((acc, ingredient) => {
@@ -71,7 +71,7 @@ export const IngredientsGroup: FC<IngredientsGroupProps> = ({
           groupedIngredients[type] && (
             <div
               key={type}
-              ref={(el) => (sectionRefs.current[type] = el)} // Сохраняем ссылку на раздел
+              ref={(el) => (sectionRefs.current[type] = el)}
               className={style.block}
             >
               <h2 className="text text_type_main-medium">

@@ -6,6 +6,7 @@ import orderSlice from './order-object';
 import passwordSlice from './reset-password';
 import authSlice from './auth';
 import ordersSlice from './feed-service';
+import ordersProfileSlice from './order-service';
 
 const rootReducer = combineReducers({
   ingredients: ingredientsSlice,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   passwordSlice: passwordSlice,
   authSlice: authSlice,
   orders: ordersSlice,
+  ordersProfile: ordersProfileSlice,
 });
 
 export default rootReducer;

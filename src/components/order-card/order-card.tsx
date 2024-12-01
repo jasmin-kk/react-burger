@@ -25,6 +25,20 @@ export const OrderCard: FC<OrderCardProps> = ({ order, ingredients }) => {
   const extraIngredientsCount =
     orderIngredients.length - visibleIngredients.length;
 
+  const getStatusTextAndColor = (status: string) => {
+    if (status === 'done') {
+      return { text: 'Выполнен', color: '#00CCCC' };
+    } else if (status === 'created') {
+      return { text: 'Создан', color: 'white' };
+    } else {
+      return { text: 'Готовится', color: 'white' };
+    }
+  };
+
+  const { text: statusText, color: statusColor } = getStatusTextAndColor(
+    order.status
+  );
+
   return (
     <div className={style.main}>
       <div className={style.header}>
@@ -34,7 +48,12 @@ export const OrderCard: FC<OrderCardProps> = ({ order, ingredients }) => {
         </span>
       </div>
       <p className="text text_type_main-medium m-2">{order.name}</p>
-      <p className="text text_type_main-small m-6">{order.status}</p>
+      <p
+        className="text text_type_main-small m-6"
+        style={{ color: statusColor }}
+      >
+        {statusText}
+      </p>
       <div className={style.bottom}>
         <div className={style.circleContainer}>
           {visibleIngredients.map((ingredient, index) => (

@@ -4,6 +4,23 @@ const SOCKET_URL = 'wss://norma.nomoreparties.space/orders/all';
 
 let socket: WebSocket | null = null;
 
+interface Order {
+  _id: string;
+  number: number;
+  name: string;
+  status: string;
+  ingredients: string[];
+}
+
+interface OrdersState {
+  orders: Order[];
+  total: number;
+  totalToday: number;
+  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  error: string | null;
+}
+
+// Мидлвар для работы с WebSocket
 export const socketMiddleware =
   (store: { dispatch: (action: { type: string; payload?: any }) => void }) =>
   (next: any) =>
@@ -53,11 +70,25 @@ const ordersSlice = createSlice({
     totalToday: 0,
     status: 'idle',
     error: null as string | null,
-  },
+  } as OrdersState,
   reducers: {
     updateOrders: (state, action) => {
       const { orders, total, totalToday } = action.payload;
-      state.orders = orders;
+
+      const mergedOrders = [...state.orders];
+
+      orders.forEach((order: Order) => {
+        const existingOrderIndex = mergedOrders.findIndex(
+          (existingOrder) => existingOrder._id === order._id
+        );
+        if (existingOrderIndex === -1) {
+          mergedOrders.push(order);
+        } else {
+          mergedOrders[existingOrderIndex] = order;
+        }
+      });
+
+      state.orders = mergedOrders;
       state.total = total;
       state.totalToday = totalToday;
       state.status = 'succeeded';

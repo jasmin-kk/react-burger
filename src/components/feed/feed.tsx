@@ -3,12 +3,19 @@ import style from './feed.module.css';
 import { OrderCard } from '../order-card/order-card';
 import { Info } from '../info/info';
 import { Link, useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store'; // Путь к вашему файлу с Redux store
 
 const SOCKET_URL = 'wss://norma.nomoreparties.space/orders/all';
 
 export const Feed: FC = () => {
   const location = useLocation();
   const [orders, setOrders] = useState<any[]>([]);
+
+  // Получаем ингредиенты из Redux state
+  const { ingredients, error } = useSelector(
+    (state: RootState) => state.ingredients
+  );
 
   useEffect(() => {
     const socket = new WebSocket(SOCKET_URL);
@@ -52,12 +59,12 @@ export const Feed: FC = () => {
                 state={{ backgroundLocation: location }}
                 style={{ textDecoration: 'none' }}
               >
-                <OrderCard></OrderCard>
+                <OrderCard order={order} ingredients={ingredients} />
               </Link>
             ))}
           </div>
         </div>
-        <Info></Info>
+        <Info />
       </div>
     </div>
   );

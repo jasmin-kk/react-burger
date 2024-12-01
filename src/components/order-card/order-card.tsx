@@ -5,78 +5,53 @@ import {
   FormattedDate,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 
-export const OrderCard: FC = () => {
+interface OrderCardProps {
+  order: any;
+  ingredients: any[];
+}
+
+export const OrderCard: FC<OrderCardProps> = ({ order, ingredients }) => {
   const today = new Date();
+
+  const getIngredientsById = (ingredientIds: string[]) => {
+    return ingredientIds.map((id) =>
+      ingredients.find((ingredient) => ingredient._id === id)
+    );
+  };
+
+  const orderIngredients = getIngredientsById(order.ingredients);
+
   return (
     <div className={style.main}>
       <div className={style.header}>
-        <span className="text text_type_main-default">#034534</span>
+        <span className="text text_type_main-default">#{order.number}</span>
         <span className={style.date}>
-          <FormattedDate
-            date={
-              new Date(
-                today.getFullYear(),
-                today.getMonth(),
-                today.getDate(),
-                today.getHours(),
-                today.getMinutes() - 1,
-                0
-              )
-            }
-          />
+          <FormattedDate date={new Date(order.createdAt)} />
         </span>
       </div>
-      <p className="text text_type_main-medium m-2">Interstellar бургер</p>
-      <p className="text text_type_main-small m-6">Готовится</p>
+      <p className="text text_type_main-medium m-2">{order.name}</p>
+      <p className="text text_type_main-small m-6">{order.status}</p>
       <div className={style.bottom}>
         <div className={style.circleContainer}>
-          <div
-            className={style.circle}
-            style={{
-              backgroundImage:
-                "url('https://code.s3.yandex.net/react/code/bun-02.png')",
-            }}
-          ></div>
-          <div
-            className={style.circle}
-            style={{
-              backgroundImage:
-                "url('https://code.s3.yandex.net/react/code/bun-02.png')",
-            }}
-          ></div>
-          <div
-            className={style.circle}
-            style={{
-              backgroundImage:
-                "url('https://code.s3.yandex.net/react/code/bun-02.png')",
-            }}
-          ></div>
-          <div
-            className={style.circle}
-            style={{
-              backgroundImage:
-                "url('https://code.s3.yandex.net/react/code/bun-02.png')",
-            }}
-          ></div>
-          <div
-            className={style.circle}
-            style={{
-              backgroundImage:
-                "url('https://code.s3.yandex.net/react/code/bun-02.png')",
-            }}
-          ></div>
-          <div
-            className={`${style.circle} ${style.extra} text text_type_main-small`}
-            style={{
-              backgroundImage:
-                "url('https://code.s3.yandex.net/react/code/bun-02.png')",
-            }}
-          >
-            +3
-          </div>
+          {orderIngredients.map((ingredient, index) =>
+            ingredient ? (
+              <div
+                key={ingredient._id}
+                className={style.circle}
+                style={{
+                  backgroundImage: `url(${ingredient.image})`,
+                }}
+              ></div>
+            ) : null
+          )}
         </div>
         <div className={style.sum}>
-          <p className="text text_type_main-default mr-2">560</p>
+          <p className="text text_type_main-default mr-2">
+            {orderIngredients.reduce(
+              (sum, ingredient) => sum + (ingredient ? ingredient.price : 0),
+              0
+            )}
+          </p>
           <CurrencyIcon type="primary" />
         </div>
       </div>

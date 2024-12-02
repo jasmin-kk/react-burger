@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from '../../store';
 import { registerUser } from '../../services/auth';
 import { useNavigate } from 'react-router-dom';
 import style from './register.module.css';
@@ -8,13 +8,12 @@ import {
   Input,
   PasswordInput,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { AppDispatch } from '../../store';
 
 export const Register: FC = () => {
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
   const [name, setName] = useState('');
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const handleRegister = async (e: React.FormEvent) => {

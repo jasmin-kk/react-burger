@@ -1,6 +1,7 @@
 import React, { FC, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch } from '../../store';
+import { useAppSelector } from '../../store';
 import { loginUser } from '../../services/auth';
 import style from './login.module.css';
 import {
@@ -8,19 +9,21 @@ import {
   Input,
   PasswordInput,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { AppDispatch } from '../../store';
-import { RootState } from '../../store';
 
 export const Login: FC = () => {
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const error = useSelector((state: RootState) => state.authSlice.error);
+
+  const error = useAppSelector((state) => state.authSlice.error);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = await dispatch(loginUser({ email, password: pass }));
+    if (result.meta.requestStatus === 'fulfilled') {
+      navigate('/dashboard');
+    }
   };
 
   return (
@@ -29,7 +32,6 @@ export const Login: FC = () => {
       {error && (
         <p className="text text_type_main-default mb-4">{error}</p>
       )}{' '}
-      {/* Сообщение об ошибке */}
       <form onSubmit={handleLogin}>
         <Input
           type={'text'}

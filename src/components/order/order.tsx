@@ -3,8 +3,7 @@ import { MenuNav } from '../menu-nav/menu-nav';
 import { OrderCard } from '../order-card/order-card';
 import style from './order.module.css';
 import { Link, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store';
+import { useAppSelector } from '../../store';
 
 const SOCKET_URL = 'wss://norma.nomoreparties.space/orders';
 
@@ -12,9 +11,7 @@ export const Order: FC = () => {
   const location = useLocation();
   const [ordersProfile, setOrders] = useState<any[]>([]);
 
-  const { ingredients, error } = useSelector(
-    (state: RootState) => state.ingredients
-  );
+  const { ingredients, error } = useAppSelector((state) => state.ingredients);
 
   useEffect(() => {
     const accessToken = localStorage.getItem('accessToken');

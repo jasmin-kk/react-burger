@@ -1,7 +1,7 @@
 import React, { FC, ReactNode, useEffect, useState } from 'react';
 import { useNavigate, useLocation, Navigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../store';
+import { useAppDispatch } from '../store';
+import { useAppSelector } from '../store';
 import { refreshToken, fetchUserData } from '../services/auth';
 
 interface ProtectedRouteProps {
@@ -15,11 +15,11 @@ const ProtectedRoute: FC<ProtectedRouteProps> = ({
   unknown = false,
   isProtected = false,
 }) => {
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const user = useSelector((state: RootState) => state.authSlice.user);
+  const user = useAppSelector((state) => state.authSlice.user);
   const accessToken = localStorage.getItem('accessToken');
   const refreshTokenValue = localStorage.getItem('refreshToken');
 

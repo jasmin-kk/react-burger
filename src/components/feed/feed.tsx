@@ -3,8 +3,7 @@ import style from './feed.module.css';
 import { OrderCard } from '../order-card/order-card';
 import { Info } from '../info/info';
 import { Link, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store';
+import { useAppSelector } from '../../store';
 
 const SOCKET_URL = 'wss://norma.nomoreparties.space/orders/all';
 
@@ -14,9 +13,7 @@ export const Feed: FC = () => {
   const [total, setTotal] = useState<number>(0);
   const [totalToday, setTotalToday] = useState<number>(0);
 
-  const { ingredients, error } = useSelector(
-    (state: RootState) => state.ingredients
-  );
+  const { ingredients, error } = useAppSelector((state) => state.ingredients);
 
   useEffect(() => {
     const socket = new WebSocket(SOCKET_URL);

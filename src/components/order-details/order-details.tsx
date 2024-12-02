@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useAppSelector, useAppDispatch } from '../../store';
 import { fetchOrders } from '../../services/feed-service';
 import style from './order-details.module.css';
 import {
@@ -9,14 +9,14 @@ import {
 import { AppDispatch } from '../../store';
 
 export const OrderDetails: FC = () => {
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch: AppDispatch = useAppDispatch();
   const today = new Date();
 
   const [order, setOrder] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const orders = useSelector((state: any) => state.orders.orders);
-  const { ingredients } = useSelector((state: any) => state.ingredients);
+  const orders = useAppSelector((state) => state.orders.orders);
+  const { ingredients } = useAppSelector((state) => state.ingredients);
 
   const pathParts = window.location.pathname.split('/');
   const orderId = pathParts[pathParts.length - 1];

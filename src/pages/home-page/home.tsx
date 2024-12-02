@@ -1,11 +1,9 @@
-import React, { FC, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchIngredients } from '../../services/ingredients';
+import React, { FC } from 'react';
+import { useAppDispatch, useAppSelector } from '../../store';
 import { BurgerIngredients } from '../../components/burger-ingredients/burger-ingredients';
 import { BurgerConstructor } from '../../components/burger-constructor/burger-constructor';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { RootState, AppDispatch } from '../../store';
 import { Ingredient } from '../../utils/data';
 import {
   addIngredient,
@@ -14,12 +12,10 @@ import {
 import style from './home.module.css';
 
 export const HomePage: FC = () => {
-  const dispatch: AppDispatch = useDispatch();
-  const { ingredients, error } = useSelector(
-    (state: RootState) => state.ingredients
-  );
-  const { ingredientCounts } = useSelector(
-    (state: RootState) => state.burgerConstructor
+  const dispatch = useAppDispatch();
+  const { ingredients, error } = useAppSelector((state) => state.ingredients);
+  const { ingredientCounts } = useAppSelector(
+    (state) => state.burgerConstructor
   );
 
   const handleIngredientDrop = (ingredient: Ingredient) => {

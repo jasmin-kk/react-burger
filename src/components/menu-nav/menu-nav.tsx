@@ -1,12 +1,11 @@
 import React, { FC } from 'react';
 import style from '../profile/profile.module.css';
 import { logoutUser } from '../../services/auth';
-import { AppDispatch } from '../../store';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from '../../store';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 export const MenuNav: FC = () => {
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 

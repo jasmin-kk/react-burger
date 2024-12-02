@@ -1,55 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-const SOCKET_URL = 'wss://norma.nomoreparties.space/orders';
-
 interface Order {
   _id: string;
   status: string;
   ingredients: string[];
 }
-
-let socket: WebSocket | null = null;
-
-export const socketProfileMiddleware =
-  (store: any) => (next: any) => (action: any) => {
-    if (action.type === fetchOrders.pending.type) {
-      const token = localStorage.getItem('accessToken');
-      if (!token) {
-        return next(action);
-      }
-
-      socket = new WebSocket(`${SOCKET_URL}?token=${token}`);
-
-      socket.onopen = () => {
-        console.log('WebSocket подключен');
-      };
-
-      socket.onmessage = (event: any) => {
-        const data = JSON.parse(event.data);
-        if (data.success) {
-          store.dispatch(updateOrders(data));
-        } else if (data.message === 'Invalid or missing token') {
-          store.dispatch(setError('Токен недействителен или отсутствует.'));
-        }
-      };
-
-      socket.onerror = (error: any) => {
-        console.error('WebSocket ошибка:', error);
-      };
-
-      socket.onclose = () => {
-        console.log('WebSocket закрыт');
-      };
-    }
-
-    if (action.type === fetchOrders.rejected.type) {
-      if (socket) {
-        socket.close();
-      }
-    }
-
-    return next(action);
-  };
 
 export const fetchOrders = createAsyncThunk('orders/fetchOrders', async () => {
   return new Promise<void>((resolve) => resolve());

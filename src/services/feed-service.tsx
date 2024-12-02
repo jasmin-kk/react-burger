@@ -1,9 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-const SOCKET_URL = 'wss://norma.nomoreparties.space/orders/all';
-
-let socket: WebSocket | null = null;
-
 interface Order {
   _id: string;
   number: number;
@@ -19,43 +15,6 @@ interface OrdersState {
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 }
-
-export const socketMiddleware =
-  (store: { dispatch: (action: { type: string; payload?: any }) => void }) =>
-  (next: any) =>
-  (action: any) => {
-    if (action.type === fetchOrders.pending.type) {
-      socket = new WebSocket(SOCKET_URL);
-
-      socket.onopen = () => {
-        console.log('WebSocket подключен');
-        socket?.send(JSON.stringify({ action: 'getOrders' }));
-      };
-
-      socket.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        if (data.success) {
-          store.dispatch(updateOrders(data));
-        }
-      };
-
-      socket.onerror = (error) => {
-        console.error('WebSocket ошибка:', error);
-      };
-
-      socket.onclose = () => {
-        console.log('WebSocket закрыт');
-      };
-    }
-
-    if (action.type === fetchOrders.rejected.type) {
-      if (socket) {
-        socket.close();
-      }
-    }
-
-    return next(action);
-  };
 
 export const fetchOrders = createAsyncThunk('orders/fetchOrders', async () => {
   return new Promise<void>((resolve) => resolve());

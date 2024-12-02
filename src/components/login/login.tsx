@@ -21,9 +21,6 @@ export const Login: FC = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = await dispatch(loginUser({ email, password: pass }));
-    if (result.meta.requestStatus === 'fulfilled') {
-      navigate('/dashboard');
-    }
   };
 
   return (

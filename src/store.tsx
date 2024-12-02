@@ -1,14 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import rootReducer from './services/root-reducer';
-import { socketMiddleware } from './services/feed-service';
-import { socketProfileMiddleware } from './services/order-service';
+import { socketMiddleware } from './services/socket-middleware';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
 const store = configureStore({
   reducer: rootReducer,
   devTools: process.env.NODE_ENV !== 'production',
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(socketMiddleware, socketProfileMiddleware),
+    getDefaultMiddleware().concat(socketMiddleware),
 });
 
 export const useAppDispatch = () => useDispatch<AppDispatch>();

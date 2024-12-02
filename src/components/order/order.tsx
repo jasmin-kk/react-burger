@@ -1,40 +1,37 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect } from 'react';
 import { MenuNav } from '../menu-nav/menu-nav';
 import { OrderCard } from '../order-card/order-card';
 import style from './order.module.css';
 import { Link, useLocation } from 'react-router-dom';
-import { useAppSelector } from '../../store';
+import { useAppDispatch, useAppSelector } from '../../store';
+import { updateOrders } from '../../services/order-slice';
 
 const SOCKET_URL = 'wss://norma.nomoreparties.space/orders';
 
 export const Order: FC = () => {
   const location = useLocation();
-  const [ordersProfile, setOrders] = useState<any[]>([]);
+  const dispatch = useAppDispatch();
 
-  const { ingredients, error } = useAppSelector((state) => state.ingredients);
+  const { orders } = useAppSelector((state) => state.orders);
+  const { ingredients } = useAppSelector((state) => state.ingredients);
 
   useEffect(() => {
     const accessToken = localStorage.getItem('accessToken');
-
     if (accessToken) {
       const token = accessToken.startsWith('Bearer ')
         ? accessToken.slice(7)
         : accessToken;
 
-      const socketUrlWithToken = `${SOCKET_URL}?token=${token}`;
-
-      const socket = new WebSocket(socketUrlWithToken);
+      const socket = new WebSocket(`${SOCKET_URL}?token=${token}`);
 
       socket.onopen = () => {
         console.log('WebSocket подключен');
-        socket.send(JSON.stringify({ action: 'getOrders' }));
       };
 
       socket.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        if (data.success) {
-          console.log('Полученные данные:', data);
-          setOrders(data.orders);
+        if (data.orders) {
+          dispatch(updateOrders({ orders: data.orders }));
         }
       };
 
@@ -52,16 +49,16 @@ export const Order: FC = () => {
     } else {
       console.error('Access token is not available');
     }
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className={style.main}>
       <MenuNav />
       <div className={style.scroll}>
-        {ordersProfile.length === 0 ? (
+        {orders.length === 0 ? (
           <p>У вас нет заказов.</p>
         ) : (
-          ordersProfile.map((order: any) => (
+          orders.map((order: any) => (
             <div className={style.block} key={order._id}>
               <Link
                 to={`/profile/order/${order._id}`}

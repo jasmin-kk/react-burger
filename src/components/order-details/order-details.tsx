@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from 'react';
-import { useAppSelector, useAppDispatch } from '../../store';
+import { useAppDispatch, useAppSelector } from '../../store';
 import { wsActions } from '../../services/socket-middleware';
 import style from './order-details.module.css';
 import {
@@ -15,9 +15,7 @@ export const OrderDetails: FC = () => {
   const [order, setOrder] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const { orders, total, totalToday } = useAppSelector(
-    (state) => state.wsOrders
-  );
+  const { orders } = useAppSelector((state) => state.wsOrders);
   const { ingredients } = useAppSelector((state) => state.ingredients);
 
   const pathParts = window.location.pathname.split('/');
@@ -47,7 +45,19 @@ export const OrderDetails: FC = () => {
     if (foundOrder) {
       setOrder(foundOrder);
     } else {
-      setError('Order not found');
+      fetch(`https://norma.nomoreparties.space/api/orders/${orderId}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Order not found');
+          }
+          return response.json();
+        })
+        .then((data) => {
+          setOrder(data.orders[0]);
+        })
+        .catch((error) => {
+          setError(error.message);
+        });
     }
   }, [orders, orderId]);
 

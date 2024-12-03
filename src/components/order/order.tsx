@@ -4,7 +4,7 @@ import { OrderCard } from '../order-card/order-card';
 import style from './order.module.css';
 import { Link, useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { updateOrders } from '../../services/order-slice';
+import { wsActions } from '../../services/socket-middleware';
 
 const SOCKET_URL = 'wss://norma.nomoreparties.space/orders';
 
@@ -12,7 +12,9 @@ export const Order: FC = () => {
   const location = useLocation();
   const dispatch = useAppDispatch();
 
-  const { orders } = useAppSelector((state) => state.orders);
+  const { orders, total, totalToday } = useAppSelector(
+    (state) => state.wsOrders
+  );
   const { ingredients } = useAppSelector((state) => state.ingredients);
 
   useEffect(() => {
@@ -22,29 +24,10 @@ export const Order: FC = () => {
         ? accessToken.slice(7)
         : accessToken;
 
-      const socket = new WebSocket(`${SOCKET_URL}?token=${token}`);
-
-      socket.onopen = () => {
-        console.log('WebSocket подключен');
-      };
-
-      socket.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        if (data.orders) {
-          dispatch(updateOrders({ orders: data.orders }));
-        }
-      };
-
-      socket.onerror = (error) => {
-        console.error('Ошибка WebSocket:', error);
-      };
-
-      socket.onclose = () => {
-        console.log('WebSocket закрыт');
-      };
+      dispatch(wsActions.wsConnectionStart({ url: SOCKET_URL, token }));
 
       return () => {
-        socket.close();
+        dispatch(wsActions.wsConnectionClose(null));
       };
     } else {
       console.error('Access token is not available');
@@ -58,7 +41,7 @@ export const Order: FC = () => {
         {orders.length === 0 ? (
           <p>У вас нет заказов.</p>
         ) : (
-          orders.map((order: any) => (
+          orders.map((order) => (
             <div className={style.block} key={order._id}>
               <Link
                 to={`/profile/order/${order._id}`}

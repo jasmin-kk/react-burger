@@ -4,7 +4,7 @@ import { OrderCard } from '../order-card/order-card';
 import { Info } from '../info/info';
 import { Link, useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { fetchOrders } from '../../services/order-slice';
+import { wsActions } from '../../services/socket-middleware';
 
 const SOCKET_URL = 'wss://norma.nomoreparties.space/orders/all';
 
@@ -12,16 +12,17 @@ export const Feed: FC = () => {
   const location = useLocation();
   const dispatch = useAppDispatch();
 
-  const { orders, total, totalToday } = useAppSelector((state) => state.orders);
+  const { orders, total, totalToday } = useAppSelector(
+    (state) => state.wsOrders
+  );
   const { ingredients } = useAppSelector((state) => state.ingredients);
 
   useEffect(() => {
-    dispatch(
-      fetchOrders({
-        url: SOCKET_URL,
-        token: '',
-      })
-    );
+    dispatch(wsActions.wsConnectionStart({ url: SOCKET_URL }));
+
+    return () => {
+      dispatch(wsActions.wsConnectionClose(null));
+    };
   }, [dispatch]);
 
   return (

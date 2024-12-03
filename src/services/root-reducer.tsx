@@ -7,6 +7,7 @@ import passwordSlice from './reset-password';
 import authSlice from './auth';
 import ordersSlice from './feed-service';
 import ordersProfileSlice from './order-service';
+import { ordersReducer } from './socket-middleware';
 
 const rootReducer = combineReducers({
   ingredients: ingredientsSlice,
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   authSlice: authSlice,
   orders: ordersSlice,
   ordersProfile: ordersProfileSlice,
+  wsOrders: ordersReducer,
 });
 
 export default rootReducer;

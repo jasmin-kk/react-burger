@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from 'react';
 import { useAppSelector, useAppDispatch } from '../../store';
-import { fetchOrders } from '../../services/feed-service';
+import { wsActions } from '../../services/socket-middleware';
 import style from './order-details.module.css';
 import {
   CurrencyIcon,
@@ -15,14 +15,31 @@ export const OrderDetails: FC = () => {
   const [order, setOrder] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const orders = useAppSelector((state) => state.orders.orders);
+  const { orders, total, totalToday } = useAppSelector(
+    (state) => state.wsOrders
+  );
   const { ingredients } = useAppSelector((state) => state.ingredients);
 
   const pathParts = window.location.pathname.split('/');
   const orderId = pathParts[pathParts.length - 1];
 
   useEffect(() => {
-    dispatch(fetchOrders());
+    const accessToken = localStorage.getItem('accessToken');
+    if (accessToken) {
+      const token = accessToken.startsWith('Bearer ')
+        ? accessToken.slice(7)
+        : accessToken;
+      dispatch(
+        wsActions.wsConnectionStart({
+          url: 'wss://norma.nomoreparties.space/orders',
+          token,
+        })
+      );
+    }
+
+    return () => {
+      dispatch(wsActions.wsConnectionClose(null));
+    };
   }, [dispatch]);
 
   useEffect(() => {
@@ -30,19 +47,7 @@ export const OrderDetails: FC = () => {
     if (foundOrder) {
       setOrder(foundOrder);
     } else {
-      fetch(`https://norma.nomoreparties.space/api/orders/${orderId}`)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error('Order not found');
-          }
-          return response.json();
-        })
-        .then((data) => {
-          setOrder(data.orders[0]);
-        })
-        .catch((error) => {
-          setError(error.message);
-        });
+      setError('Order not found');
     }
   }, [orders, orderId]);
 

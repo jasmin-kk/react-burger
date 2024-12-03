@@ -25,10 +25,6 @@ export const Order: FC = () => {
         : accessToken;
 
       dispatch(wsActions.wsConnectionStart({ url: SOCKET_URL, token }));
-
-      return () => {
-        dispatch(wsActions.wsConnectionClose(null));
-      };
     } else {
       console.error('Access token is not available');
     }

@@ -34,10 +34,6 @@ export const OrderDetails: FC = () => {
         })
       );
     }
-
-    return () => {
-      dispatch(wsActions.wsConnectionClose(null));
-    };
   }, [dispatch]);
 
   useEffect(() => {

@@ -59,12 +59,10 @@ export const socketMiddleware = (wsActions: TWsActions): Middleware => {
 
       socket.onerror = (error) => {
         console.error('Ошибка WebSocket:', error);
-        store.dispatch(wsActions.wsConnectionError('Ошибка WebSocket.'));
       };
 
       socket.onclose = () => {
         console.log('WebSocket закрыт');
-        store.dispatch(wsActions.wsConnectionClose(null));
       };
 
       action.payload.socket = socket;

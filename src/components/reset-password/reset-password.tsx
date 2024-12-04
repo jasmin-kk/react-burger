@@ -1,5 +1,5 @@
-import React, { FC } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { FC, useState } from 'react';
+import { useAppDispatch } from '../../store';
 import { useNavigate } from 'react-router-dom';
 import { resetPassword } from '../../services/reset-password';
 import {
@@ -8,12 +8,11 @@ import {
   PasswordInput,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import style from './reset-password.module.css';
-import { AppDispatch } from '../../store';
 
 export const ResetPassword: FC = () => {
-  const [code, setCode] = React.useState('');
-  const [pass, setPass] = React.useState('');
-  const dispatch: AppDispatch = useDispatch();
+  const [code, setCode] = useState('');
+  const [pass, setPass] = useState('');
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {

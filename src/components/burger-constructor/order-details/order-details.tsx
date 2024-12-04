@@ -1,11 +1,10 @@
 import React, { FC } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../store';
+import { useAppSelector } from '../../../store';
 import doneImage from '../../../images/done.png';
 import style from '../order-details/order-details.module.css';
 
 export const OrderDetails: FC = () => {
-  const order = useSelector((state: RootState) => state.order.order);
+  const order = useAppSelector((state) => state.order.order);
 
   return (
     <div className={style.main}>

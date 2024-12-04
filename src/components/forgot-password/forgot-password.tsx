@@ -5,17 +5,18 @@ import {
   Button,
   Input,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch } from '../../store';
+import { useAppSelector } from '../../store';
 import { forgotPassword } from '../../services/reset-password';
 import { setHasRequestedPasswordReset } from '../../services/auth';
-import { AppDispatch, RootState } from '../../store';
 
 export const ForgotPassword: FC = () => {
   const [email, setEmail] = React.useState('');
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { loading, success, error } = useSelector(
-    (state: RootState) => state.passwordSlice
+
+  const { loading, success, error } = useAppSelector(
+    (state) => state.passwordSlice
   );
 
   const handleSubmit = (e: React.FormEvent) => {

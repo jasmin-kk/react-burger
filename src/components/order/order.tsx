@@ -12,9 +12,7 @@ export const Order: FC = () => {
   const location = useLocation();
   const dispatch = useAppDispatch();
 
-  const { orders, total, totalToday } = useAppSelector(
-    (state) => state.wsOrders
-  );
+  const { orders } = useAppSelector((state) => state.wsOrders);
   const { ingredients } = useAppSelector((state) => state.ingredients);
 
   useEffect(() => {
@@ -28,6 +26,10 @@ export const Order: FC = () => {
     } else {
       console.error('Access token is not available');
     }
+
+    return () => {
+      dispatch(wsActions.wsConnectionClose(null));
+    };
   }, [dispatch]);
 
   return (

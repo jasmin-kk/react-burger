@@ -8,6 +8,8 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import { AppDispatch } from '../../store';
 
+const SOCKET_URL = 'wss://norma.nomoreparties.space/orders/all';
+
 export const OrderDetails: FC = () => {
   const dispatch: AppDispatch = useAppDispatch();
   const today = new Date();
@@ -22,18 +24,7 @@ export const OrderDetails: FC = () => {
   const orderId = pathParts[pathParts.length - 1];
 
   useEffect(() => {
-    const accessToken = localStorage.getItem('accessToken');
-    if (accessToken) {
-      const token = accessToken.startsWith('Bearer ')
-        ? accessToken.slice(7)
-        : accessToken;
-      dispatch(
-        wsActions.wsConnectionStart({
-          url: 'wss://norma.nomoreparties.space/orders',
-          token,
-        })
-      );
-    }
+    dispatch(wsActions.wsConnectionStart({ url: SOCKET_URL }));
   }, [dispatch]);
 
   useEffect(() => {

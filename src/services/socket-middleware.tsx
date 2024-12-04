@@ -70,9 +70,12 @@ export const socketMiddleware = (wsActions: TWsActions): Middleware => {
 
     if (
       action.type === wsActions.wsConnectionClose.type &&
-      action.payload.socket
+      action.payload === null
     ) {
-      action.payload.socket.close();
+      const socket = action.payload?.socket;
+      if (socket) {
+        socket.close();
+      }
     }
 
     return next(action);

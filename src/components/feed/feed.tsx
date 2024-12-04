@@ -19,6 +19,10 @@ export const Feed: FC = () => {
 
   useEffect(() => {
     dispatch(wsActions.wsConnectionStart({ url: SOCKET_URL }));
+
+    return () => {
+      dispatch(wsActions.wsConnectionClose(null));
+    };
   }, [dispatch]);
 
   return (

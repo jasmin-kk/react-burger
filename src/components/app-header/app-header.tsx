@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, useLocation } from 'react-router-dom'; // Импортируем NavLink и useLocation
+import { NavLink, useLocation } from 'react-router-dom';
 import style from './app-header.module.css';
 import {
   BurgerIcon,
@@ -30,7 +30,7 @@ export const AppHeader = () => {
             Конструктор
           </NavLink>
           <NavLink
-            to="/"
+            to="/feed"
             className={({ isActive }) =>
               `pl-5 pr-5 pb-5 m-2 pt-5 text text_type_main-default ${
                 isActive ? style.mainText : style.text
@@ -38,7 +38,7 @@ export const AppHeader = () => {
             }
           >
             <ListIcon
-              type={location.pathname === '/orders' ? 'primary' : 'secondary'}
+              type={location.pathname === '/feed' ? 'primary' : 'secondary'}
               className="m-2"
             />
             Лента заказов

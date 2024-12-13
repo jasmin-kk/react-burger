@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from '../store';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { fetchIngredients } from '../services/ingredients';
 import { HomePage } from '../pages/home-page/home';
@@ -10,12 +10,15 @@ import { LoginPage } from '../pages/login';
 import { ResetPasswordPage } from '../pages/reset-password';
 import { ProfilePage } from '../pages/profile';
 import ProtectedRouteElement from '../components/protected-route-element';
-import { AppDispatch } from '../store';
 import { IngredientDetails } from '../components/burger-ingredients/ingredient-details/ingredient-details';
 import { Modal } from '../components/modal/modal';
+import { FeedPage } from '../pages/feed';
+import { OrderPage } from '../pages/orders';
+import { OrderDetails } from '../components/order-details/order-details';
+import { FeedDetailsPage } from '../pages/feed-details/feed-details';
 
 export const Index: FC = () => {
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const location = useLocation();
   const navigate = useNavigate();
   const backgroundLocation = location.state?.backgroundLocation;
@@ -80,6 +83,15 @@ export const Index: FC = () => {
             </ProtectedRouteElement>
           }
         />
+        <Route path="/feed" element={<FeedPage />} />
+        <Route
+          path="/profile/order"
+          element={
+            <ProtectedRouteElement isProtected>
+              <OrderPage />
+            </ProtectedRouteElement>
+          }
+        />
         <Route
           path="/profile"
           element={
@@ -89,18 +101,44 @@ export const Index: FC = () => {
           }
         />
         <Route path="/ingredients/:id" element={<IngredientDetailsPage />} />
+        <Route path="/feed/:id" element={<FeedDetailsPage />} />
+        <Route path="/profile/order/:id" element={<FeedDetailsPage />} />
       </Routes>
       {backgroundLocation && (
-        <Routes>
-          <Route
-            path="/ingredients/:id"
-            element={
-              <Modal title={'Детали ингридиента'} onClose={closeModal}>
-                <IngredientDetails />
-              </Modal>
-            }
-          />
-        </Routes>
+        <>
+          <Routes>
+            <Route
+              path="/ingredients/:id"
+              element={
+                <Modal title={'Детали ингредиента'} onClose={closeModal}>
+                  <IngredientDetails />
+                </Modal>
+              }
+            />
+          </Routes>
+
+          <Routes>
+            <Route
+              path="/feed/:id"
+              element={
+                <Modal title={'Детали'} onClose={closeModal}>
+                  <OrderDetails />
+                </Modal>
+              }
+            />
+          </Routes>
+
+          <Routes>
+            <Route
+              path="/profile/order/:id"
+              element={
+                <Modal title={'Детали'} onClose={closeModal}>
+                  <OrderDetails />
+                </Modal>
+              }
+            />
+          </Routes>
+        </>
       )}
     </>
   );

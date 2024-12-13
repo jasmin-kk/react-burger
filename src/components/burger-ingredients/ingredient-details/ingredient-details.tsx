@@ -1,13 +1,10 @@
 import React, { FC, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../store';
+import { useAppSelector } from '../../../store';
 import { Ingredient } from '../../../utils/data';
 import style from './ingredient-details.module.css';
 
 export const IngredientDetails: FC = () => {
-  const ingredients = useSelector(
-    (state: RootState) => state.ingredients.ingredients
-  );
+  const ingredients = useAppSelector((state) => state.ingredients.ingredients);
   const [ingredient, setIngredient] = useState<Ingredient | null>(null);
 
   useEffect(() => {

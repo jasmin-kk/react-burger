@@ -1,0 +1,62 @@
+.main{
+    background: #1C1C21;
+    width: 100%;
+    border-radius: 40px;
+    padding: 24px;
+    color: white;
+    margin-bottom: 16px;
+}
+
+.header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.circleContainer{
+    display: flex;
+    align-items: center;
+}
+
+.circle {
+    width: 50px;
+    height: 50px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 50%;
+    background-color: rgba(28, 28, 33, 1);
+    border: 2px solid rgba(128, 26, 178, 1);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    margin-right: -15px;
+}
+
+.img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.extra {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(28, 28, 33, 1);
+    font-size: 18px;
+    color: #fff;
+}
+
+.date{
+    color: #8585AD;
+}
+
+.bottom{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 20px;
+}
+
+.sum{
+    display: flex;
+    align-items: center;
+}

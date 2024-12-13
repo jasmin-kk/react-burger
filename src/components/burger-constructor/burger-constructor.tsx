@@ -9,13 +9,12 @@ import style from './burger-constructor.module.css';
 import { Ingredient } from '../../utils/data';
 import { Modal } from '../modal/modal';
 import { OrderDetails } from './order-details/order-details';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch } from '../../store';
+import { useAppSelector } from '../../store';
 import { placeOrder } from '../../services/order-object';
-import { RootState } from '../../store';
-import { AppDispatch } from '../../store';
-import { SortableIngredient } from './sortable-ingredient/sortable-ingredient';
 import { updateIngredientOrder } from '../../services/burger-constructor';
 import { useNavigate } from 'react-router-dom';
+import { SortableIngredient } from './sortable-ingredient/sortable-ingredient';
 
 const generateUniqueId = () => `${Date.now()}-${Math.random()}`;
 
@@ -32,11 +31,9 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
 }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [bun, setBun] = useState<Ingredient | null>(null);
-  const dispatch: AppDispatch = useDispatch();
-  const error = useSelector((state: RootState) => state.order.error);
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.authSlice.user
-  );
+  const dispatch = useAppDispatch();
+  const error = useAppSelector((state) => state.order.error);
+  const isAuthenticated = useAppSelector((state) => state.authSlice.user);
   const navigate = useNavigate();
 
   const [addedIngredients, setAddedIngredients] = useState<Ingredient[]>([]);

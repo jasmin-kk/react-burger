@@ -44,11 +44,7 @@ export const placeOrder = createAsyncThunk(
 const orderSlice = createSlice({
   name: 'order',
   initialState: initialOrderState,
-  reducers: {
-    clearOrder: (state) => {
-      state.order = null;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(placeOrder.pending, (state) => {

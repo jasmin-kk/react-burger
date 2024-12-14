@@ -20,6 +20,7 @@
 		"cross-env": "^7.0.3",
 		"css-loader": "^6.8.1",
 		"cssnano": "^6.0.1",
+с		"cypress": "^13.16.1",
 		"cz-conventional-changelog": "^3.3.0",
 		"eslint": "^8.57.1",
 		"eslint-config-prettier": "^8.10.0",

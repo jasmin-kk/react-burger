@@ -41,6 +41,7 @@ export const HomePage: FC = () => {
           ingredients={ingredients}
           onIngredientDrop={handleIngredientDrop}
           onIngredientRemove={handleIngredientRemove}
+          data-testid="burger-constructor"
         />
         <div id="modal-root"></div>
       </div>

@@ -149,16 +149,25 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
   }, [error]);
 
   return (
-    <div ref={drop} className={style.main}>
+    <div ref={drop} className={style.main} data-testid="burger-constructor">
       {error && (
         <p className="text text_type_main-small text_color_inactive">{error}</p>
       )}
 
       {!bun && addedIngredients.length === 0 && (
         <>
-          <div className={`${style.null} ${style['m-1']}`}></div>
-          <div className={`${style.middle} ${style['m-1']}`}></div>
-          <div className={`${style.nullBottom} ${style['m-1']}`}></div>
+          <div
+            className={`${style.null} ${style['m-1']}`}
+            data-testid="empty-constructor"
+          ></div>
+          <div
+            className={`${style.middle} ${style['m-1']}`}
+            data-testid="middle-constructor"
+          ></div>
+          <div
+            className={`${style.nullBottom} ${style['m-1']}`}
+            data-testid="empty-bottom-constructor"
+          ></div>
         </>
       )}
 
@@ -170,6 +179,7 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
           text={`${bun.name} (верх)`}
           price={bun.price}
           thumbnail={bun.image}
+          data-testid="bun-top"
         />
       )}
 
@@ -183,6 +193,7 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
               index={index}
               moveIngredient={moveIngredient}
               handleRemove={handleRemoveIngredient}
+              data-testid={`sortable-ingredient-${ingredient.id}`}
             />
           ))}
       </div>
@@ -195,11 +206,15 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
           text={`${bun.name} (низ)`}
           price={bun.price}
           thumbnail={bun.image}
+          data-testid="bun-bottom"
         />
       )}
 
-      <div className={style.footer}>
-        <p className={`text text_type_digits-default ${style.sum}`}>
+      <div className={style.footer} data-testid="footer-constructor">
+        <p
+          className={`text text_type_digits-default ${style.sum}`}
+          data-testid="total-price"
+        >
           {totalPrice} <CurrencyIcon type="primary" />
         </p>
         <Button
@@ -208,12 +223,13 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
           type="primary"
           size="medium"
           disabled={!bun}
+          data-testid="place-order-button"
         >
           Оформить заказ
         </Button>
       </div>
       {isModalOpen && (
-        <Modal title="" onClose={closeModal}>
+        <Modal title="" onClose={closeModal} data-testid="order-modal">
           <OrderDetails />
         </Modal>
       )}

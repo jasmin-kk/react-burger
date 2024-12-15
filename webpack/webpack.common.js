@@ -79,7 +79,7 @@ module.exports = {
   },
   plugins: [
     new HTMLWebpackPlugins({
-      template: path.resolve(__dirname, '..', './index.html'),
+      template: path.resolve(__dirname, '..', './public/index.html'),
     }),
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({

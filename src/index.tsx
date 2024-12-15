@@ -3,7 +3,7 @@ import { Index } from './app';
 import React from 'react';
 import { Provider } from 'react-redux';
 import store from './store';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { HashRouter as Router } from 'react-router-dom';
 import { AppHeader } from './components/app-header/app-header';
 
 const domNode = document.getElementById('root') as HTMLDivElement;

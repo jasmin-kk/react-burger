@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-interface Order {
+export interface Order {
   _id: string;
   number: number;
   name: string;
@@ -8,7 +8,7 @@ interface Order {
   ingredients: string[];
 }
 
-interface OrdersState {
+export interface OrdersState {
   orders: Order[];
   total: number;
   totalToday: number;

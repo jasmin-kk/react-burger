@@ -86,6 +86,7 @@ export const IngredientsGroup: FC<IngredientsGroupProps> = ({
                       backgroundLocation: { location },
                       ingredient: ingredient,
                     }}
+                    data-testid="ingredient-item"
                     className={style.item}
                   >
                     <IngredientItem

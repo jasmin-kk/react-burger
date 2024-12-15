@@ -29,6 +29,7 @@ export const IngredientItem: FC<IngredientItemProps> = ({
       ref={drag}
       className={style.block}
       style={{ opacity: isDragging ? 0.5 : 1 }}
+      data-testid="ingredient-item"
     >
       <Counter count={count} size="default" extraClass="m-1" />
       <img src={ingredient.image} alt={ingredient.name} />

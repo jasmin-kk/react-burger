@@ -45,14 +45,19 @@ export const SortableIngredient: FC<SortableIngredientProps> = ({
   };
 
   return (
-    <div ref={ref} className={style.scrollBlock}>
-      <DragIcon type="primary" />
+    <div
+      ref={ref}
+      className={style.scrollBlock}
+      data-testid={`sortable-ingredient-${ingredient.id}`}
+    >
+      <DragIcon type="primary" data-testid="drag-icon" />
       <ConstructorElement
         extraClass="m-1"
         text={ingredient.name}
         price={ingredient.price}
         thumbnail={ingredient.image}
         handleClose={handleClose}
+        data-testid={`constructor-element-${ingredient.id}`}
       />
     </div>
   );

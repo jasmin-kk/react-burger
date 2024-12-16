@@ -65,7 +65,11 @@ export const IngredientsGroup: FC<IngredientsGroupProps> = ({
   }, []);
 
   return (
-    <div ref={groupRef} className={style.scroll}>
+    <div
+      ref={groupRef}
+      className={style.scroll}
+      data-testid="ingredients-group"
+    >
       {order.map(
         (type) =>
           groupedIngredients[type] && (
@@ -73,8 +77,12 @@ export const IngredientsGroup: FC<IngredientsGroupProps> = ({
               key={type}
               ref={(el) => (sectionRefs.current[type] = el)}
               className={style.block}
+              data-testid={`ingredient-group-${type}`}
             >
-              <h2 className="text text_type_main-medium">
+              <h2
+                className="text text_type_main-medium"
+                data-testid={`ingredient-type-${type}`}
+              >
                 {ingredientTypeTitles[type]}
               </h2>
               <div className={style.list}>

@@ -149,9 +149,18 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
   }, [error]);
 
   return (
-    <div ref={drop} className={style.main} data-testid="burger-constructor">
+    <div
+      ref={drop}
+      className={style.main}
+      data-testid="burger-constructor-drop-zone"
+    >
       {error && (
-        <p className="text text_type_main-small text_color_inactive">{error}</p>
+        <p
+          className="text text_type_main-small text_color_inactive"
+          data-testid="error-message"
+        >
+          {error}
+        </p>
       )}
 
       {!bun && addedIngredients.length === 0 && (

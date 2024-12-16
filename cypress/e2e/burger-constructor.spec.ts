@@ -5,7 +5,7 @@ interface Context {
 }
 
 describe('Burger Constructor Page', function () {
-  beforeEach(function (this: Context) {
+  beforeEach(function () {
     cy.visit('/');
     cy.fixture('ingredients').then((ingredients) => {
       this.ingredients = ingredients as Ingredient[];

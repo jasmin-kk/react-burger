@@ -208,15 +208,16 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
       </div>
 
       {bun && (
-        <ConstructorElement
-          extraClass="m-1"
-          type="bottom"
-          isLocked={!!bun}
-          text={`${bun.name} (низ)`}
-          price={bun.price}
-          thumbnail={bun.image}
-          data-testid="bun-bottom"
-        />
+        <div data-testid="bun-bottom">
+          <ConstructorElement
+            extraClass="m-1"
+            type="bottom"
+            isLocked={true}
+            text={`${bun.name} (низ)`}
+            price={bun.price}
+            thumbnail={bun.image}
+          />
+        </div>
       )}
 
       <div className={style.footer} data-testid="footer-constructor">
@@ -238,8 +239,10 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
         </Button>
       </div>
       {isModalOpen && (
-        <Modal title="" onClose={closeModal} data-testid="order-modal">
-          <OrderDetails />
+        <Modal title="" onClose={closeModal}>
+          <div data-testid="order-modal">
+            <OrderDetails />
+          </div>
         </Modal>
       )}
     </div>

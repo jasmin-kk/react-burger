@@ -85,7 +85,7 @@ export const IngredientsGroup: FC<IngredientsGroupProps> = ({
               >
                 {ingredientTypeTitles[type]}
               </h2>
-              <div className={style.list}>
+              <div className={style.list} data-testid="ingredient-list">
                 {groupedIngredients[type].map((ingredient) => (
                   <Link
                     key={ingredient._id}

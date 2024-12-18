@@ -183,7 +183,7 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
       {bun && (
         <ConstructorElement
           type="top"
-          extraClass="m-1"
+          extraClass="m-1 test-bun-top"
           isLocked={!!bun}
           text={`${bun.name} (верх)`}
           price={bun.price}
